@@ -16,6 +16,18 @@ namespace WarehouseManagementApp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Transaction>()
+                    .HasOne(x => x.WarehouseFrom)
+                    .WithMany(x => x.TransactionsFrom)
+                    .HasForeignKey(x => x.WarehouseFromID)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<Transaction>()
+                        .HasOne(x => x.WarehouseIn)
+                        .WithMany(x => x.TransactionsIn)
+                        .HasForeignKey(x => x.WarehouseInID)
+                        .OnDelete(DeleteBehavior.ClientSetNull);
+
             const byte WAREHOUSES = 4;
             const byte PRODUCTS = 5;
             const byte TRANSACTIONS = 2;
@@ -23,7 +35,7 @@ namespace WarehouseManagementApp.Models
             Warehouse[] _warehouses = new Warehouse[WAREHOUSES];
             for (int i = 0; i < _warehouses.Length; i++)
             {
-                _warehouses[i + 1] = new Warehouse { 
+                _warehouses[i] = new Warehouse { 
                     ID = i + 1, 
                     Name = $"Warehouse {i + 1}", 
                     Address = $"Address {i + 1}" 
@@ -46,12 +58,12 @@ namespace WarehouseManagementApp.Models
             for (int i = 0; i < _transactions.Length; i++)
             {
                 _transactions[i] = new Transaction { 
-                    ID = i + 1, 
-                    Operation = "Debit", 
-                    Count = (int)_random.NextInt64(0, 1000), 
+                    ID = i + 1,                  
                     DateTime = DateTime.Parse("2022-05-25"), 
-                    ProductID = 1, 
-                    WarehouseID = 1 
+                    WarehouseFromID = 1,
+                    WarehouseInID = 2,
+                    ProductID = 1,
+                    Count = (int)_random.NextInt64(0, 1000)
                 };
             }
 
