@@ -9,6 +9,6 @@ namespace WarehouseManagementApp.Models
         public decimal Price { get; set; } = 0;
 
         [JsonIgnore]
-        public ICollection<Transaction> Transactions { get; set; }
+        public ICollection<Transaction>? Transactions { get; set; }
     }
 }
