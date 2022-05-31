@@ -28,7 +28,7 @@ namespace WarehouseManagementApp.Controllers
                 return NotFound();
             }
 
-            return new JsonResult(_product);
+            return Ok(_product);
         }
 
         [HttpPost]

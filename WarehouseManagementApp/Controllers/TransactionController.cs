@@ -28,7 +28,27 @@ namespace WarehouseManagementApp.Controllers
                 return NotFound();
             }
 
-            return new JsonResult(_transaction);
+            return Ok(_transaction);
+        }
+
+        [HttpGet("{date}/{warehouseID}")]
+        public async Task<ActionResult> GetProductsForDateAsync(DateTime date, int warehouseID)
+        {
+            var _products = await _db.Transactions
+                    .Where(transaction => transaction.WarehouseInID == warehouseID && transaction.DateTime <= date.Date)
+                    .GroupBy(transaction => transaction.ProductID)
+                    .Select(transaction => new 
+                    {
+                        transaction.First().Product,
+                        Count = transaction.Sum(transaction => transaction.Count)
+                    }).ToListAsync();
+
+            if (_products.Count == 0)
+            {
+                return NoContent();
+            }
+
+            return Ok( _products);
         }
 
         [HttpPost]
