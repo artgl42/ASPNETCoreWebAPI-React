@@ -16,5 +16,66 @@ namespace WarehouseManagementApp.Controllers
         {
             return Ok(await _db.Warehouses.ToArrayAsync());
         }
+
+        [HttpGet("{warehouseID}")]
+        public async Task<ActionResult<Warehouse>> GetWarehouseAsync(int warehouseID)
+        {
+            var _warehouse = await _db.Warehouses
+                .FirstOrDefaultAsync(warehouse => warehouse.ID == warehouseID);
+
+            if (_warehouse is null)
+            {
+                return NotFound();
+            }
+
+            return new JsonResult(_warehouse);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<Warehouse>>> CreateWarehouseAsync(Warehouse warehouseToCreate)
+        {
+            if (warehouseToCreate is null)
+            {
+                return BadRequest();
+            }
+
+            _db.Warehouses.Add(warehouseToCreate);
+            await _db.SaveChangesAsync();
+            return Ok(await _db.Warehouses.ToArrayAsync());
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<IEnumerable<Warehouse>>> UpdateWarehouseAsync(Warehouse warehouseToUpdate)
+        {
+            if (warehouseToUpdate is null)
+            {
+                return BadRequest();
+            }
+
+            if (!_db.Warehouses.Any(warehouse => warehouse.ID == warehouseToUpdate.ID))
+            {
+                return NotFound();
+            }
+
+            _db.Warehouses.Update(warehouseToUpdate);
+            await _db.SaveChangesAsync();
+            return Ok(await _db.Warehouses.ToArrayAsync());
+        }
+
+        [HttpDelete("{warehouseID}")]
+        public async Task<ActionResult<IEnumerable<Warehouse>>> DeleteWarehouseAsync(int warehouseID)
+        {
+            var _warehouseToDel = await _db.Warehouses.
+                FirstOrDefaultAsync(warehouse => warehouse.ID == warehouseID);
+
+            if (_warehouseToDel is null)
+            {
+                return NotFound();
+            }
+
+            _db.Warehouses.Remove(_warehouseToDel);
+            await _db.SaveChangesAsync();
+            return Ok(await _db.Warehouses.ToArrayAsync());
+        }
     }
 }

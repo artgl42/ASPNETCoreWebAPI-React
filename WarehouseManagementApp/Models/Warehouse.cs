@@ -9,8 +9,8 @@ namespace WarehouseManagementApp.Models
         public string Address { get; set; } = string.Empty;
 
         [JsonIgnore]
-        public ICollection<Transaction> TransactionsFrom { get; set; }
+        public ICollection<Transaction>? TransactionsFrom { get; set; }
         [JsonIgnore]
-        public ICollection<Transaction> TransactionsIn { get; set; }
+        public ICollection<Transaction>? TransactionsIn { get; set; }
     }
 }
