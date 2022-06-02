@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WarehouseManagementApp.Models;
+using WarehouseManagementServer.Models;
 
-namespace WarehouseManagementApp.Controllers
+namespace WarehouseManagementServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -29,26 +29,6 @@ namespace WarehouseManagementApp.Controllers
             }
 
             return Ok(_transaction);
-        }
-
-        [HttpGet("{date}/{warehouseID}")]
-        public async Task<ActionResult> GetProductsForDateAsync(DateTime date, int warehouseID)
-        {
-            var _products = await _db.Transactions
-                    .Where(transaction => transaction.WarehouseInID == warehouseID && transaction.DateTime <= date.Date)
-                    .GroupBy(transaction => transaction.ProductID)
-                    .Select(transaction => new 
-                    {
-                        transaction.First().Product,
-                        Count = transaction.Sum(transaction => transaction.Count)
-                    }).ToListAsync();
-
-            if (_products.Count == 0)
-            {
-                return NoContent();
-            }
-
-            return Ok( _products);
         }
 
         [HttpPost]

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WarehouseManagementApp.Models;
+using WarehouseManagementServer.Models;
 
-namespace WarehouseManagementApp.Controllers
+namespace WarehouseManagementServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

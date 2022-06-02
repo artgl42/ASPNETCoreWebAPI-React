@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace WarehouseManagementApp.Models
+namespace WarehouseManagementServer.Models
 {
     public class AppDbContext : DbContext
     {
