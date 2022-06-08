@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Constants from "../utilities/Constants";
+import Constants from "../Constants";
 
 export default function TransactionTable() {
   const [transactions, setTransactions] = useState([]);
@@ -37,9 +37,9 @@ export default function TransactionTable() {
             <tr key={transaction.id}>
               <th scope="row">{transaction.id}</th>
               <td>{transaction.dateTime}</td>
-              <td>{transaction.warehouseFromID}</td>
-              <td>{transaction.warehouseInID}</td>
-              <td>{transaction.productID}</td>
+              <td>{transaction.warehouseFrom.name}</td>
+              <td>{transaction.warehouseIn.name}</td>
+              <td>{transaction.product.name}</td>
               <td>{transaction.count}</td>
               <td>
                 <button

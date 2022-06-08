@@ -14,7 +14,7 @@ namespace WarehouseManagementServer.Controllers
         [HttpGet("{date}/{warehouseID}")]
         public async Task<ActionResult> GetProductsForDateAsync(DateTime date, int warehouseID)
         {
-            var _products = await _db.Transactions
+            var _productsInWarehouse = await _db.Transactions
                     .Where(transaction => transaction.WarehouseInID == warehouseID && transaction.DateTime <= date.Date)
                     .GroupBy(transaction => transaction.ProductID)
                     .Select(transaction => new 
@@ -23,12 +23,17 @@ namespace WarehouseManagementServer.Controllers
                         Count = transaction.Sum(transaction => transaction.Count)
                     }).ToListAsync();
 
-            if (_products.Count == 0)
+            if (_productsInWarehouse is null)
+            {
+                return NotFound();
+            }
+
+            if (_productsInWarehouse.Count == 0)
             {
                 return NoContent();
             }
 
-            return Ok( _products);
+            return Ok( _productsInWarehouse);
         }
     }
 }

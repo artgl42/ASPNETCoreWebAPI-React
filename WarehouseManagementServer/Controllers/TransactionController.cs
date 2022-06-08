@@ -12,9 +12,31 @@ namespace WarehouseManagementServer.Controllers
         public TransactionController(AppDbContext dbContext) => _db = dbContext;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactionaAsync()
+        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactionsAsync()
         {
-            return Ok(await _db.Transactions.ToArrayAsync());
+            var _transactions = await _db.Transactions
+                .Select(transaction => new
+                {
+                    transaction.ID,
+                    transaction.DateTime,
+                    transaction.WarehouseFrom,
+                    transaction.WarehouseIn,
+                    transaction.Product,
+                    transaction.Count
+                })
+                .ToListAsync();
+
+            if (_transactions is null)
+            {
+                return NotFound();
+            }
+
+            if (_transactions.Count == 0)
+            {
+                return NoContent();
+            }
+
+            return Ok(_transactions);
         }
 
         [HttpGet("{transactionID}")]

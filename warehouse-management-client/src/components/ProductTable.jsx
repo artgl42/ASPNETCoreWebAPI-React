@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Constants from "../utilities/Constants";
+import Constants from "../Constants";
 
 export default function ProductTable() {
   const [products, setProducts] = useState([]);
