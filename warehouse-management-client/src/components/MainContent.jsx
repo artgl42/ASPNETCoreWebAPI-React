@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import ProductTable from "./ProductTable";
 import WarehouseTable from "./WarehouseTable";
 import TransactionTable from "./TransactionTable";
-import { Nav } from "react-bootstrap";
+import WarehouseCards from "./WarehouseCards";
+import { Nav, NavDropdown } from "react-bootstrap";
 
 export default function MainContent() {
   const [content, setContent] = useState(null);
@@ -34,6 +35,15 @@ export default function MainContent() {
             Transactions
           </Nav.Link>
         </Nav.Item>
+        <NavDropdown title="Reports" id="nav-dropdown">
+          <NavDropdown.Item 
+          eventKey="link-4.1"
+          onClick={() => setContent(<WarehouseCards />)}>
+            Warehouse (products)
+          </NavDropdown.Item>
+          <NavDropdown.Item eventKey="link-4.2">Report 2</NavDropdown.Item>
+          <NavDropdown.Item eventKey="link-4.3">Report 3</NavDropdown.Item>
+        </NavDropdown>
       </Nav>
 
       <div className="row mt-2">

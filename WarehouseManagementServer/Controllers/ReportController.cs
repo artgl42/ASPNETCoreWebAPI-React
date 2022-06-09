@@ -12,7 +12,7 @@ namespace WarehouseManagementServer.Controllers
         public ReportController(AppDbContext dbContext) => _db = dbContext;
 
         [HttpGet("{date}/{warehouseID}")]
-        public async Task<ActionResult> GetProductsForDateAsync(DateTime date, int warehouseID)
+        public async Task<ActionResult> GetProductsOnDateAsync(DateTime date, int warehouseID)
         {
             var _productsInWarehouse = await _db.Transactions
                     .Where(transaction => transaction.WarehouseInID == warehouseID && transaction.DateTime <= date.Date)
