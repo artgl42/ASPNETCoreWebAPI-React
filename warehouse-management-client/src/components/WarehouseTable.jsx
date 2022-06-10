@@ -9,7 +9,10 @@ export default function WarehouseTable() {
     fetch(url, {
       method: "GET",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) return response.json();
+        else throw new Error(response.status);
+      })
       .then((response) => {
         setWarehouses(response);
       })
@@ -54,7 +57,10 @@ export default function WarehouseTable() {
         </tbody>
       </table>
       <div>
-        <button onClick={getWarehouses} className="btn btn-outline-primary btn-sm w-100">
+        <button
+          onClick={getWarehouses}
+          className="btn btn-outline-primary btn-sm w-100"
+        >
           Get warehouses from server
         </button>
         <button

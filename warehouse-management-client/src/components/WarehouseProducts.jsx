@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Constants from "../Constants";
 
 export default function WarehouseProducts(props) {
-  const [date, setDate] = useState(new Date().toISOString().slice(0,10));
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [products, setProducts] = useState([]);
 
   function handleChange(e) {
@@ -11,13 +11,18 @@ export default function WarehouseProducts(props) {
 
   function getProducts() {
     setProducts([]);
-    const formatedDate = `${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}-${new Date(date).getDate()}`;
+    const formatedDate = `${new Date(date).getFullYear()}-${
+      new Date(date).getMonth() + 1
+    }-${new Date(date).getDate()}`;
     const url = `${Constants.API_URL_GET_ALL_PRODUCTS_ON_DATE}/${formatedDate}/${props.value}`;
 
     fetch(url, {
       method: "GET",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) return response.json();
+        else throw new Error(response.status);
+      })
       .then((response) => {
         setProducts(response);
       })

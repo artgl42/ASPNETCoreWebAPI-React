@@ -14,7 +14,10 @@ export default function WarehouseCards() {
     fetch(url, {
       method: "GET",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) return response.json();
+        else throw new Error(response.status);
+      })
       .then((response) => {
         setWarehouses(response);
       })
@@ -25,27 +28,30 @@ export default function WarehouseCards() {
 
   return (
     <div>
-      {content === null &&
-    <Row xs={1} md={4} className="g-2">
-      {warehouses.map((warehouse) => (
-        <Col>
-          <Card key={warehouse.id}>
-            <Card.Img variant="top" src={image} />
-            <Card.Body>
-              <Card.Title>{warehouse.name}</Card.Title>
-              <Card.Text>{warehouse.address}</Card.Text>
-              <button
-                onClick={() => setContent(<WarehouseProducts value={warehouse.id} />)}
-                className="btn btn-outline-success btn-sm mx-1 my-1"
-              >
-                Products
-              </button>
-            </Card.Body>
-          </Card>
-        </Col>
-      ))}
-    </Row>}
-    {content}
+      {content === null && (
+        <Row xs={1} md={4} className="g-2">
+          {warehouses.map((warehouse) => (
+            <Col>
+              <Card key={warehouse.id}>
+                <Card.Img variant="top" src={image} />
+                <Card.Body>
+                  <Card.Title>{warehouse.name}</Card.Title>
+                  <Card.Text>{warehouse.address}</Card.Text>
+                  <button
+                    onClick={() =>
+                      setContent(<WarehouseProducts value={warehouse.id} />)
+                    }
+                    className="btn btn-outline-success btn-sm mx-1 my-1"
+                  >
+                    Products
+                  </button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
+      {content}
     </div>
   );
 }

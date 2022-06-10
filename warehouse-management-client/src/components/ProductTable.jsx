@@ -9,7 +9,10 @@ export default function ProductTable() {
     fetch(url, {
       method: "GET",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) return response.json();
+        else throw new Error(response.status);
+      })
       .then((response) => {
         setProducts(response);
       })
@@ -54,7 +57,10 @@ export default function ProductTable() {
         </tbody>
       </table>
       <div>
-        <button onClick={getProducts} className="btn btn-outline-primary btn-sm w-100">
+        <button
+          onClick={getProducts}
+          className="btn btn-outline-primary btn-sm w-100"
+        >
           Get products from server
         </button>
         <button

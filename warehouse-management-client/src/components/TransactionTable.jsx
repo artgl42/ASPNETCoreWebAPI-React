@@ -9,7 +9,10 @@ export default function TransactionTable() {
     fetch(url, {
       method: "GET",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) return response.json();
+        else throw new Error(response.status);
+      })
       .then((response) => {
         setTransactions(response);
       })
@@ -60,7 +63,10 @@ export default function TransactionTable() {
         </tbody>
       </table>
       <div>
-        <button onClick={getTransactions} className="btn btn-outline-primary btn-sm w-100">
+        <button
+          onClick={getTransactions}
+          className="btn btn-outline-primary btn-sm w-100"
+        >
           Get transactions from server
         </button>
         <button
