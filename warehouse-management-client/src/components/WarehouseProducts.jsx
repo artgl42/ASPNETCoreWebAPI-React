@@ -14,7 +14,7 @@ export default function WarehouseProducts(props) {
     const formatedDate = `${new Date(date).getFullYear()}-${
       new Date(date).getMonth() + 1
     }-${new Date(date).getDate()}`;
-    const url = `${Constants.API_URL_GET_ALL_PRODUCTS_ON_DATE}/${formatedDate}/${props.value}`;
+    const url = `${Constants.API_URL_GET_ALL_PRODUCTS_ON_DATE}/${formatedDate}/${props.value[0]}`;
 
     fetch(url, {
       method: "GET",
@@ -33,6 +33,7 @@ export default function WarehouseProducts(props) {
 
   return (
     <div>
+      <h2>{props.value[1]}</h2>
       <input type="date" value={date} onChange={handleChange} />
       <button
         onClick={getProducts}

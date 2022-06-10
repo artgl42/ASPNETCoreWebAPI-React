@@ -39,7 +39,7 @@ export default function WarehouseCards() {
                   <Card.Text>{warehouse.address}</Card.Text>
                   <button
                     onClick={() =>
-                      setContent(<WarehouseProducts value={warehouse.id} />)
+                      setContent(<WarehouseProducts value={ [warehouse.id, warehouse.name] } />)
                     }
                     className="btn btn-outline-success btn-sm mx-1 my-1"
                   >
