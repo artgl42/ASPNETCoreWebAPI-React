@@ -1,20 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Constants from "../Constants";
+import { Table, Stack, Button, Badge } from "react-bootstrap";
 
 export default function WarehouseProducts(props) {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [products, setProducts] = useState([]);
+  const [productsCount, setProductsCount] = useState("");
 
   function handleChange(e) {
     setDate(e.target.value);
   }
+
+  function ClearProductsTable() {
+    setProducts([]);
+    setProductsCount("");
+  }
+
+  useEffect(() => {
+    setProducts([]);
+    setProductsCount("");
+  }, [props]);
 
   function getProducts() {
     setProducts([]);
     const formatedDate = `${new Date(date).getFullYear()}-${
       new Date(date).getMonth() + 1
     }-${new Date(date).getDate()}`;
-    const url = `${Constants.API_URL_GET_ALL_PRODUCTS_ON_DATE}/${formatedDate}/${props.value[0]}`;
+    const url = `${Constants.API_URL_GET_ALL_PRODUCTS_ON_DATE}/${formatedDate}/${props.id}`;
 
     fetch(url, {
       method: "GET",
@@ -25,24 +37,29 @@ export default function WarehouseProducts(props) {
       })
       .then((response) => {
         setProducts(response);
+        setProductsCount(response.length);
       })
       .catch((error) => {
         console.log(error);
+        setProductsCount(0);
       });
   }
 
   return (
-    <div>
-      <h2>{props.value[1]}</h2>
-      <input type="date" value={date} onChange={handleChange} />
-      <button
-        onClick={getProducts}
-        className="btn btn-outline-success btn-sm mx-1 my-1"
-      >
-        Show
-      </button>
-      <div className="table-responsive">
-        <table className="table table-striped table-bordered table-hover table-sm">
+    <Stack className="col-md-12 mx-auto">
+      <Stack className="col-md-6 mx-auto">
+        <input type="date" value={date} onChange={handleChange} />
+        <Button variant="outline-success" size="sm" onClick={getProducts}>
+          Show <Badge bg="secondary">{productsCount}</Badge>
+        </Button>
+        <Button variant="outline-danger" size="sm" onClick={ClearProductsTable}>
+          Clear
+        </Button>
+        <br />
+      </Stack>
+      {productsCount === 0 && <h2>No products</h2>}
+      {productsCount !== 0 && productsCount !== "" && (
+        <Table striped bordered hover size="sm">
           <thead>
             <tr>
               <th scope="col">Name</th>
@@ -57,8 +74,8 @@ export default function WarehouseProducts(props) {
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
-    </div>
+        </Table>
+      )}
+    </Stack>
   );
 }

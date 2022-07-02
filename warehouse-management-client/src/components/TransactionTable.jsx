@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Constants from "../Constants";
+import { Stack, Table, Button, ButtonGroup } from "react-bootstrap";
 
 export default function TransactionTable() {
   const [transactions, setTransactions] = useState([]);
@@ -22,8 +23,8 @@ export default function TransactionTable() {
   }
 
   return (
-    <div className="table-responsive">
-      <table className="table table-striped table-bordered table-hover table-sm">
+    <Stack>
+      <Table striped bordered hover size="sm">
         <thead>
           <tr>
             <th scope="col">ID</th>
@@ -45,43 +46,45 @@ export default function TransactionTable() {
               <td>{transaction.product.name}</td>
               <td>{transaction.count}</td>
               <td>
-                <button
+                <Button
+                  className="mx-1 my-0"
+                  variant="outline-success"
+                  size="sm"
                   onClick={() => console.log("Button Update")}
-                  className="btn btn-outline-success btn-sm mx-1 my-1"
                 >
                   Update
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
                   onClick={() => console.log("Button Delete")}
-                  className="btn btn-outline-danger btn-sm"
                 >
                   Delete
-                </button>
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
-      </table>
-      <div>
-        <button
-          onClick={getTransactions}
-          className="btn btn-outline-primary btn-sm w-100"
-        >
+      </Table>
+      <ButtonGroup vertical>
+        <Button variant="outline-primary" size="sm" onClick={getTransactions}>
           Get transactions from server
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="outline-success"
+          size="sm"
           onClick={() => setTransactions([])}
-          className="btn btn-outline-success btn-sm w-100"
         >
           Create transactions
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="outline-danger"
+          size="sm"
           onClick={() => setTransactions([])}
-          className="btn btn-outline-danger btn-sm w-100"
         >
           Clear
-        </button>
-      </div>
-    </div>
+        </Button>
+      </ButtonGroup>
+    </Stack>
   );
 }
