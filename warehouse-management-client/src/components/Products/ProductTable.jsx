@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import Constants from "../Constants";
+import Urls from "../../Urls";
 import { Stack, Table, Button, ButtonGroup } from "react-bootstrap";
+import ProductRow from "./ProductRow";
 
 export default function ProductTable() {
   const [products, setProducts] = useState([]);
-  const url = Constants.API_URL_GET_ALL_PRODUCTS;
+  const url = Urls.API_URL_GET_ALL_PRODUCTS;
 
   function getProducts() {
     fetch(url, {
@@ -35,28 +36,11 @@ export default function ProductTable() {
         </thead>
         <tbody>
           {products.map((product) => (
-            <tr key={product.id}>
-              <th scope="row">{product.id}</th>
-              <td>{product.name}</td>
-              <td>{product.price}</td>
-              <td>
-                <Button
-                  className="mx-1 my-0"
-                  variant="outline-success"
-                  size="sm"
-                  onClick={() => console.log("Button Update")}
-                >
-                  Update
-                </Button>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => console.log("Button Delete")}
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
+            <ProductRow key={product.id} product={{
+              id: product.id,
+              name: product.name,
+              price: product.price
+            }} />
           ))}
         </tbody>
       </Table>
@@ -67,15 +51,13 @@ export default function ProductTable() {
         <Button
           variant="outline-success"
           size="sm"
-          onClick={() => setProducts([])}
-        >
+          onClick={() => setProducts([])}>
           Create product
         </Button>
         <Button
           variant="outline-danger"
           size="sm"
-          onClick={() => setProducts([])}
-        >
+          onClick={() => setProducts([])}>
           Clear
         </Button>
       </ButtonGroup>

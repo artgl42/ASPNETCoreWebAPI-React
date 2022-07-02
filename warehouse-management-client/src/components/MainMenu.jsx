@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import ProductTable from "./ProductTable";
-import WarehouseTable from "./WarehouseTable";
-import TransactionTable from "./TransactionTable";
-import WarehouseCards from "./WarehouseCards";
+import ProductTable from "./Products/ProductTable";
+import WarehouseTable from "./Warehouses/WarehouseTable";
+import TransactionTable from "./Transactions/TransactionTable";
+import WarehouseCards from "./Reports/WarehouseCards";
 import { Container, Row, Col, Nav, NavDropdown, Alert } from "react-bootstrap";
 
 export default function MainMenu() {
   const [content, setContent] = useState(null);
-  const [help, setHelp] = useState(true);
+  const [help, setHelp] = useState(false);
 
   return (
     <Container>
@@ -15,32 +15,28 @@ export default function MainMenu() {
         <Nav.Item>
           <Nav.Link
             eventKey="ProductTable"
-            onClick={() => setContent(<ProductTable />)}
-          >
+            onClick={() => setContent(<ProductTable />)}>
             Products
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link
             eventKey="WarehouseTable"
-            onClick={() => setContent(<WarehouseTable />)}
-          >
+            onClick={() => setContent(<WarehouseTable />)}>
             Warehouses
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link
             eventKey="TransactionTable"
-            onClick={() => setContent(<TransactionTable />)}
-          >
+            onClick={() => setContent(<TransactionTable />)}>
             Transactions
           </Nav.Link>
         </Nav.Item>
-        <NavDropdown title="Reports" id="nav-dropdown">
+        <NavDropdown title="Reports" style={{ margin: 0 }}>
           <NavDropdown.Item
             eventKey="WarehouseCards"
-            onClick={() => setContent(<WarehouseCards />)}
-          >
+            onClick={() => setContent(<WarehouseCards />)}>
             Warehouse (products)
           </NavDropdown.Item>
           <NavDropdown.Item eventKey="NameReport-2" disabled>
@@ -56,7 +52,6 @@ export default function MainMenu() {
           </Nav.Link>
         </Nav.Item>
       </Nav>
-
       <Row>
         <Col>
           {content}

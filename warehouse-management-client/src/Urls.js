@@ -23,5 +23,5 @@ const API_URL_FULL = {
   API_URL_GET_ALL_PRODUCTS_ON_DATE: `${API_URL_BASE}/${REPORT_ENDPOINTS.GET_ALL_PRODUCTS_ON_DATE}`,
 };
 
-const Constants = API_URL_FULL;
-export default Constants;
+const Urls = API_URL_FULL;
+export default Urls;

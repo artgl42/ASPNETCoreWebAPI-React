@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Constants from "../Constants";
+import Urls from "../../Urls";
 import { Table, Stack, Button, Badge } from "react-bootstrap";
 
-export default function WarehouseProducts(props) {
+export default function ProductsOfWarehouse(props) {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [products, setProducts] = useState([]);
   const [productsCount, setProductsCount] = useState("");
@@ -23,10 +23,9 @@ export default function WarehouseProducts(props) {
 
   function getProducts() {
     setProducts([]);
-    const formatedDate = `${new Date(date).getFullYear()}-${
-      new Date(date).getMonth() + 1
-    }-${new Date(date).getDate()}`;
-    const url = `${Constants.API_URL_GET_ALL_PRODUCTS_ON_DATE}/${formatedDate}/${props.id}`;
+    const formatedDate = `${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1
+      }-${new Date(date).getDate()}`;
+    const url = `${Urls.API_URL_GET_ALL_PRODUCTS_ON_DATE}/${formatedDate}/${props.id}`;
 
     fetch(url, {
       method: "GET",

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import Constants from "../Constants";
+import Urls from "../../Urls";
 import { Stack, Table, Button, ButtonGroup } from "react-bootstrap";
+import WarehouseRow from "./WarehouseRow";
 
 export default function WarehouseTable() {
   const [warehouses, setWarehouses] = useState([]);
-  const url = Constants.API_URL_GET_ALL_WAREHOUSES;
+  const url = Urls.API_URL_GET_ALL_WAREHOUSES;
 
   function getWarehouses() {
     fetch(url, {
@@ -35,28 +36,11 @@ export default function WarehouseTable() {
         </thead>
         <tbody>
           {warehouses.map((warehouse) => (
-            <tr key={warehouse.id}>
-              <th scope="row">{warehouse.id}</th>
-              <td>{warehouse.name}</td>
-              <td>{warehouse.address}</td>
-              <td>
-                <Button
-                  className="mx-1 my-0"
-                  variant="outline-success"
-                  size="sm"
-                  onClick={() => console.log("Button Update")}
-                >
-                  Update
-                </Button>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => console.log("Button Delete")}
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
+            <WarehouseRow key={warehouse.id} warehouse={{
+              id: warehouse.id,
+              name: warehouse.name,
+              address: warehouse.address
+            }} />
           ))}
         </tbody>
       </Table>
@@ -67,15 +51,13 @@ export default function WarehouseTable() {
         <Button
           variant="outline-success"
           size="sm"
-          onClick={() => setWarehouses([])}
-        >
+          onClick={() => setWarehouses([])}>
           Create product
         </Button>
         <Button
           variant="outline-danger"
           size="sm"
-          onClick={() => setWarehouses([])}
-        >
+          onClick={() => setWarehouses([])}>
           Clear
         </Button>
       </ButtonGroup>

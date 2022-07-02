@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Constants from "../Constants";
-import WarehouseProducts from "./WarehouseProducts";
-import WarehouseImage from "../warehouse.png";
-import { Row, Col, Card, Container, Accordion, Button } from "react-bootstrap";
+import Urls from "../../Urls";
+import ProductsOfWarehouse from "./ProductsOfWarehouse";
+import WarehouseCard from "./WarehouseCard";
+import { Row, Container, Accordion } from "react-bootstrap";
 
 export default function WarehouseCards() {
   const [warehouses, setWarehouses] = useState([]);
@@ -11,12 +11,12 @@ export default function WarehouseCards() {
 
   function showProductsForWarehouse(warehouseID, warehouseName) {
     setProducts(null);
-    setProducts(<WarehouseProducts id={warehouseID} />);
+    setProducts(<ProductsOfWarehouse id={warehouseID} />);
     setwarehouse(warehouseName);
   }
 
   useEffect(() => {
-    const url = Constants.API_URL_GET_ALL_WAREHOUSES;
+    const url = Urls.API_URL_GET_ALL_WAREHOUSES;
 
     fetch(url, {
       method: "GET",
@@ -41,24 +41,11 @@ export default function WarehouseCards() {
           <Accordion.Body>
             <Row md={4} className="g-1">
               {warehouses.map((warehouse) => (
-                <Col>
-                  <Card key={warehouse.id}>
-                    <Card.Img variant="top" src={WarehouseImage} />
-                    <Card.Body>
-                      <Card.Title>{warehouse.name}</Card.Title>
-                      <Card.Text>{warehouse.address}</Card.Text>
-                      <Button
-                        variant="outline-success"
-                        size="sm"
-                        onClick={() =>
-                          showProductsForWarehouse(warehouse.id, warehouse.name)
-                        }
-                      >
-                        Products...
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                </Col>
+                <WarehouseCard key={warehouse.id} func={showProductsForWarehouse} warehouse={{
+                  id: warehouse.id,
+                  name: warehouse.name,
+                  address: warehouse.address
+                }} />
               ))}
             </Row>
           </Accordion.Body>
@@ -69,7 +56,7 @@ export default function WarehouseCards() {
           </Accordion.Header>
           <Accordion.Body>
             <Row>
-              <Col>{products}</Col>
+              {products}
             </Row>
           </Accordion.Body>
         </Accordion.Item>

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import Constants from "../Constants";
+import Urls from "../../Urls";
 import { Stack, Table, Button, ButtonGroup } from "react-bootstrap";
+import TransactionRow from "./TransactionRow";
 
 export default function TransactionTable() {
   const [transactions, setTransactions] = useState([]);
-  const url = Constants.API_URL_GET_ALL_TRANSACTIONS;
+  const url = Urls.API_URL_GET_ALL_TRANSACTIONS;
 
   function getTransactions() {
     fetch(url, {
@@ -38,31 +39,14 @@ export default function TransactionTable() {
         </thead>
         <tbody>
           {transactions.map((transaction) => (
-            <tr key={transaction.id}>
-              <th scope="row">{transaction.id}</th>
-              <td>{transaction.dateTime}</td>
-              <td>{transaction.warehouseFrom.name}</td>
-              <td>{transaction.warehouseIn.name}</td>
-              <td>{transaction.product.name}</td>
-              <td>{transaction.count}</td>
-              <td>
-                <Button
-                  className="mx-1 my-0"
-                  variant="outline-success"
-                  size="sm"
-                  onClick={() => console.log("Button Update")}
-                >
-                  Update
-                </Button>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => console.log("Button Delete")}
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
+            <TransactionRow key={transaction.id} transaction={{
+              id: transaction.id,
+              date: transaction.dateTime,
+              from: transaction.warehouseFrom.name,
+              in: transaction.warehouseIn.name,
+              product: transaction.product.name,
+              count: transaction.count
+            }} />
           ))}
         </tbody>
       </Table>
@@ -73,15 +57,13 @@ export default function TransactionTable() {
         <Button
           variant="outline-success"
           size="sm"
-          onClick={() => setTransactions([])}
-        >
+          onClick={() => setTransactions([])}>
           Create transactions
         </Button>
         <Button
           variant="outline-danger"
           size="sm"
-          onClick={() => setTransactions([])}
-        >
+          onClick={() => setTransactions([])}>
           Clear
         </Button>
       </ButtonGroup>
