@@ -3,7 +3,7 @@ import ProductTable from "./Products/ProductTable";
 import WarehouseTable from "./Warehouses/WarehouseTable";
 import TransactionTable from "./Transactions/TransactionTable";
 import WarehouseCards from "./Reports/WarehouseCards";
-import { Container, Row, Col, Nav, NavDropdown, Alert } from "react-bootstrap";
+import { Container, Stack, Nav, NavDropdown, Alert } from "react-bootstrap";
 
 export default function MainMenu() {
   const [content, setContent] = useState(null);
@@ -52,8 +52,7 @@ export default function MainMenu() {
           </Nav.Link>
         </Nav.Item>
       </Nav>
-      <Row>
-        <Col>
+      <Stack>
           {content}
           {help && (
             <Alert variant="success" onClose={() => setHelp(false)} dismissible>
@@ -65,8 +64,7 @@ export default function MainMenu() {
               <p>API 3 - ...</p>
             </Alert>
           )}
-        </Col>
-      </Row>
+      </Stack>
     </Container>
   );
 }
