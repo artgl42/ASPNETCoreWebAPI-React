@@ -1,28 +1,33 @@
 import React from 'react';
-import { Button } from "react-bootstrap";
+import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 
-export default function WarehouseRow(props) {
-
+export default function WarehouseRow({ id, name, address }) {
   return (
     <tr>
-      <td>{props.warehouse.id}</td>
-      <td>{props.warehouse.name}</td>
-      <td>{props.warehouse.address}</td>
+      <td>{id}</td>
+      <td>{name}</td>
+      <td>{address}</td>
       <td>
         <Button
           className="mx-1 my-0"
           variant="outline-success"
           size="sm"
-          onClick={() => console.log("Button Update")}>
+        >
           Update
         </Button>
         <Button
           variant="outline-danger"
           size="sm"
-          onClick={() => console.log("Button Delete")}>
+        >
           Delete
         </Button>
       </td>
     </tr>
-  )
+  );
 }
+WarehouseRow.propTypes = {
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  address: PropTypes.string.isRequired,
+};

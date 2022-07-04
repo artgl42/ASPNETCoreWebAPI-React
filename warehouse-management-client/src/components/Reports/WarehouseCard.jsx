@@ -1,26 +1,35 @@
-import React from "react";
-import WarehouseImage from "./warehouse.png";
-import { Button, Card } from "react-bootstrap";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Button, Card } from 'react-bootstrap';
+import WarehouseImage from '../../imgs/warehouse.png';
 
-export default function WarehouseCard(props) {
-
-  function handleClick() {
-    props.func(props.warehouse.id, props.warehouse.name);
-  }
+export default function WarehouseCard({
+  id, name, address, func,
+}) {
+  const onClick = () => {
+    func(id);
+  };
 
   return (
     <Card>
       <Card.Img variant="top" src={WarehouseImage} />
       <Card.Body>
-        <Card.Title>{props.warehouse.name}</Card.Title>
-        <Card.Text>{props.warehouse.address}</Card.Text>
+        <Card.Title>{name}</Card.Title>
+        <Card.Text>{address}</Card.Text>
         <Button
           variant="outline-success"
           size="sm"
-          onClick={handleClick}>
+          onClick={onClick}
+        >
           Products...
         </Button>
       </Card.Body>
     </Card>
   );
 }
+WarehouseCard.propTypes = {
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  address: PropTypes.string.isRequired,
+  func: PropTypes.func.isRequired,
+};

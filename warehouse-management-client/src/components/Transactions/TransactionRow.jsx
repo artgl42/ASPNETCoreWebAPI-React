@@ -1,31 +1,41 @@
 import React from 'react';
-import { Button } from "react-bootstrap";
+import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 
-export default function TransactionRow(props) {
-
+export default function TransactionRow({
+  id, date, warehouseFrom, warehouseIn, product, count,
+}) {
   return (
     <tr>
-      <td>{props.transaction.id}</td>
-      <td>{props.transaction.date}</td>
-      <td>{props.transaction.from}</td>
-      <td>{props.transaction.in}</td>
-      <td>{props.transaction.product}</td>
-      <td>{props.transaction.count}</td>
+      <td>{id}</td>
+      <td>{date}</td>
+      <td>{warehouseFrom}</td>
+      <td>{warehouseIn}</td>
+      <td>{product}</td>
+      <td>{count}</td>
       <td>
         <Button
           className="mx-1 my-0"
           variant="outline-success"
           size="sm"
-          onClick={() => console.log("Button Update")}>
+        >
           Update
         </Button>
         <Button
           variant="outline-danger"
           size="sm"
-          onClick={() => console.log("Button Delete")}>
+        >
           Delete
         </Button>
       </td>
     </tr>
-  )
+  );
 }
+TransactionRow.propTypes = {
+  id: PropTypes.number.isRequired,
+  date: PropTypes.string.isRequired,
+  warehouseFrom: PropTypes.string.isRequired,
+  warehouseIn: PropTypes.string.isRequired,
+  product: PropTypes.string.isRequired,
+  count: PropTypes.number.isRequired,
+};
