@@ -6,6 +6,7 @@ import ProductTable from './Products/ProductTable';
 import WarehouseTable from './Warehouses/WarehouseTable';
 import TransactionTable from './Transactions/TransactionTable';
 import WarehouseCards from './Reports/WarehouseCards';
+import Header from './Header';
 
 export default function MainMenu() {
   const [content, setContent] = useState(null);
@@ -13,7 +14,18 @@ export default function MainMenu() {
 
   return (
     <Container>
-      <Nav justify variant="tabs">
+      <Header />
+      {help && (
+        <Alert variant="success" onClose={() => setHelp(false)} dismissible>
+          <Alert.Heading>Help</Alert.Heading>
+          <p>API 1 - ...</p>
+          <hr />
+          <p>API 2 - ...</p>
+          <hr />
+          <p>API 3 - ...</p>
+        </Alert>
+      )}
+      <Nav variant="tabs" fill justify>
         <Nav.Item>
           <Nav.Link
             eventKey="ProductTable"
@@ -53,23 +65,13 @@ export default function MainMenu() {
           </NavDropdown.Item>
         </NavDropdown>
         <Nav.Item>
-          <Nav.Link eventKey="Help" onClick={() => setHelp(true)}>
+          <Nav.Link eventKey="Help" onClick={() => (help ? setHelp(false) : setHelp(true))}>
             ?
           </Nav.Link>
         </Nav.Item>
       </Nav>
       <Stack>
         {content}
-        {help && (
-        <Alert variant="success" onClose={() => setHelp(false)} dismissible>
-          <Alert.Heading>Help</Alert.Heading>
-          <p>API 1 - ...</p>
-          <hr />
-          <p>API 2 - ...</p>
-          <hr />
-          <p>API 3 - ...</p>
-        </Alert>
-        )}
       </Stack>
     </Container>
   );

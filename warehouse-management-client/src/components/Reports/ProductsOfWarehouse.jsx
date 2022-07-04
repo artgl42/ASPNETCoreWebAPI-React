@@ -46,7 +46,7 @@ export default function ProductsOfWarehouse({ id }) {
         <br />
       </Stack>
       {productsCount !== 0 && productsCount !== '' && (
-        <Table striped bordered hover size="sm">
+        <Table striped hover size="sm">
           <thead>
             <tr>
               <th scope="col">Name</th>

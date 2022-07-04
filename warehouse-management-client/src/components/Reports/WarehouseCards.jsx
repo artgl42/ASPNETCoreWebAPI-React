@@ -42,11 +42,11 @@ export default function WarehouseCards() {
   if (!isLoaded) return <LoadSpinner />;
   return (
     <Stack>
-      <Accordion defaultActiveKey="0">
+      <Accordion defaultActiveKey="0" flush>
         <Accordion.Item eventKey="0">
           <Accordion.Header>Warehouses</Accordion.Header>
           <Accordion.Body>
-            <Row md={4} className="g-1">
+            <Row md={4}>
               {warehouses.map((w) => (
                 <WarehouseCard
                   key={w.id}

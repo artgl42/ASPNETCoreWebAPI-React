@@ -37,7 +37,7 @@ export default function TransactionTable() {
   if (!isLoaded) return <LoadSpinner />;
   return (
     <Stack>
-      <Table striped bordered hover size="sm">
+      <Table striped hover size="sm">
         <thead>
           <tr>
             <th scope="col">ID</th>
