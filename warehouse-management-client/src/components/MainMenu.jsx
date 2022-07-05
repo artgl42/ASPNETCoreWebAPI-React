@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import {
-  Container, Stack, Nav, NavDropdown, Alert,
+  Container, Stack, Nav, Navbar, Alert, NavDropdown,
 } from 'react-bootstrap';
 import ProductTable from './Products/ProductTable';
 import WarehouseTable from './Warehouses/WarehouseTable';
 import TransactionTable from './Transactions/TransactionTable';
 import WarehouseCards from './Reports/WarehouseCards';
 import Header from './Header';
+import Logo from './imgs/warehouse.svg';
 
 export default function MainMenu() {
   const [content, setContent] = useState(null);
@@ -25,51 +26,37 @@ export default function MainMenu() {
           <p>API 3 - ...</p>
         </Alert>
       )}
-      <Nav variant="tabs" fill justify>
-        <Nav.Item>
-          <Nav.Link
-            eventKey="ProductTable"
-            onClick={() => setContent(<ProductTable />)}
-          >
-            Products
+      <Navbar bg="dark" variant="dark" className="py-2">
+        <Container>
+          <Nav.Link onClick={() => setContent(null)} className="px-2 py-0">
+            <img
+              src={Logo}
+              alt="Logo"
+              width="50"
+              height="50"
+            />
           </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link
-            eventKey="WarehouseTable"
-            onClick={() => setContent(<WarehouseTable />)}
-          >
-            Warehouses
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link
-            eventKey="TransactionTable"
-            onClick={() => setContent(<TransactionTable />)}
-          >
-            Transactions
-          </Nav.Link>
-        </Nav.Item>
-        <NavDropdown title="Reports" style={{ margin: 0 }}>
-          <NavDropdown.Item
-            eventKey="WarehouseCards"
-            onClick={() => setContent(<WarehouseCards />)}
-          >
-            Warehouse (products)
-          </NavDropdown.Item>
-          <NavDropdown.Item eventKey="NameReport-2" disabled>
-            Report 2
-          </NavDropdown.Item>
-          <NavDropdown.Item eventKey="NameReport-3" disabled>
-            Report 3
-          </NavDropdown.Item>
-        </NavDropdown>
-        <Nav.Item>
-          <Nav.Link eventKey="Help" onClick={() => (help ? setHelp(false) : setHelp(true))}>
-            ?
-          </Nav.Link>
-        </Nav.Item>
-      </Nav>
+          <Nav className="me-auto">
+            <Nav.Link onClick={() => setContent(<ProductTable />)}>Products</Nav.Link>
+            <Nav.Link onClick={() => setContent(<WarehouseTable />)}>Warehouses</Nav.Link>
+            <Nav.Link onClick={() => setContent(<TransactionTable />)}>Transactions</Nav.Link>
+            <NavDropdown title="Reports" style={{ margin: 0 }}>
+              <NavDropdown.Item
+                onClick={() => setContent(<WarehouseCards />)}
+              >
+                Products in Warehouse
+              </NavDropdown.Item>
+              <NavDropdown.Item disabled>
+                Report 2
+              </NavDropdown.Item>
+              <NavDropdown.Item disabled>
+                Report 3
+              </NavDropdown.Item>
+            </NavDropdown>
+            <Nav.Link onClick={() => (help ? setHelp(false) : setHelp(true))}>?</Nav.Link>
+          </Nav>
+        </Container>
+      </Navbar>
       <Stack>
         {content}
       </Stack>
