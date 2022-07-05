@@ -40,9 +40,9 @@ export default function ProductsOfWarehouse({ id }) {
       <Stack className="col-md-6 mx-auto">
         <input type="date" value={date} onChange={handleChange} />
         <br />
-        <h4>{`Warehouse id: ${id}`}</h4>
-        <h4>{`Selected date: ${date}`}</h4>
-        <h4>{` Products count: ${productsCount}`}</h4>
+        <h4>{`Warehouse (id): ${id}`}</h4>
+        <h4>{`Date (selected): ${new Date(date).getDate()}.${new Date(date).getMonth() + 1}.${new Date(date).getFullYear()}`}</h4>
+        <h4>{`Products (count): ${productsCount}`}</h4>
         <br />
       </Stack>
       {productsCount !== 0 && productsCount !== '' && (
