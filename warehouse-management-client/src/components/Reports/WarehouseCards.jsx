@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Stack, Row, Accordion } from 'react-bootstrap';
-import Urls from '../../Urls';
+import Urls from '../util/Urls';
+import LoadSpinner from '../util/LoadSpinner';
 import ProductsOfWarehouse from './ProductsOfWarehouse';
 import WarehouseCard from './WarehouseCard';
-import LoadSpinner from '../LoadSpinner';
 
 export default function WarehouseCards() {
   const [error, setError] = useState(null);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Stack } from 'react-bootstrap';
-import Urls from '../../Urls';
+import Urls from '../util/Urls';
 
 export default function ProductsOfWarehouse({ id }) {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));

@@ -1,6 +1,19 @@
-import React from 'react';
-import MainMenu from './components/MainMenu';
+import React, { useState } from 'react';
+import { Container } from 'react-bootstrap';
+import Slider from './components/App/Slider';
+import Menu from './components/App/Menu';
+import AlertHelp from './components/App/AlertHelp';
 
 export default function App() {
-  return <MainMenu />;
+  const [content, setContent] = useState(null);
+  const [help, setHelp] = useState(false);
+
+  return (
+    <Container>
+      <Slider />
+      <AlertHelp help={help} setHelp={setHelp} />
+      <Menu setContent={setContent} help={help} setHelp={setHelp} />
+      {content}
+    </Container>
+  );
 }

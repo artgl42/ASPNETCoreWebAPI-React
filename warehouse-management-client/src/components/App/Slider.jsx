@@ -1,11 +1,11 @@
 import React from 'react';
 import { Stack, Carousel } from 'react-bootstrap';
-import Slide1 from './imgs/slide_1.png';
-import Slide2 from './imgs/slide_2.png';
-import Slide3 from './imgs/slide_3.png';
-import Slide4 from './imgs/slide_4.png';
+import Slide1 from '../imgs/slide_1.png';
+import Slide2 from '../imgs/slide_2.png';
+import Slide3 from '../imgs/slide_3.png';
+import Slide4 from '../imgs/slide_4.png';
 
-export default function LoadSpinner() {
+export default function Slider() {
   return (
     <Stack className="mx-auto my-2">
       <Carousel>

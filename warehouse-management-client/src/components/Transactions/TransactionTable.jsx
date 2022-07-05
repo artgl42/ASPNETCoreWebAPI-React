@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
-import Urls from '../../Urls';
+import Urls from '../util/Urls';
+import LoadSpinner from '../util/LoadSpinner';
 import TransactionRow from './TransactionRow';
-import LoadSpinner from '../LoadSpinner';
 
 export default function TransactionTable() {
   const [error, setError] = useState(null);

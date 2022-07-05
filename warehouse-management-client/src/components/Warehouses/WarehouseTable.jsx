@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
-import Urls from '../../Urls';
+import Urls from '../util/Urls';
+import LoadSpinner from '../util/LoadSpinner';
 import WarehouseRow from './WarehouseRow';
-import LoadSpinner from '../LoadSpinner';
 
 export default function WarehouseTable() {
   const [error, setError] = useState(null);
