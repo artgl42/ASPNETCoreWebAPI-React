@@ -1,40 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
 import Urls from '../util/Urls';
+import useFetch from '../hooks/useFetch';
 import LoadSpinner from '../util/LoadSpinner';
 import WarehouseRow from './WarehouseRow';
 
 export default function WarehouseTable() {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { data, loading, error } = useFetch(Urls.API_URL_GET_ALL_WAREHOUSES);
   const [warehouses, setWarehouses] = useState([]);
 
-  useEffect(() => {
-    fetch(Urls.API_URL_GET_ALL_WAREHOUSES)
-      .then((result) => result.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setWarehouses(result);
-        },
-        (err) => {
-          setIsLoaded(true);
-          setError(err);
-        },
-      );
-  }, [isLoaded]);
-
   if (error) {
-    return (
-      <Stack>
-        Ошибка:
-        {error.message}
-      </Stack>
-    );
+    // eslint-disable-next-line no-console
+    console.log('Error!!!', error);
+    return null;
   }
-  if (!isLoaded) return <LoadSpinner />;
+  if (loading) return <LoadSpinner />;
   return (
     <Stack>
       <Table striped hover size="sm">
@@ -47,7 +29,7 @@ export default function WarehouseTable() {
           </tr>
         </thead>
         <tbody>
-          {warehouses.map((warehouse) => (
+          {warehouses !== null && warehouses.map((warehouse) => (
             <WarehouseRow
               key={warehouse.id}
               id={warehouse.id}
@@ -61,7 +43,7 @@ export default function WarehouseTable() {
         <Button
           variant="outline-primary"
           size="sm"
-          onClick={() => setIsLoaded(false)}
+          onClick={() => setWarehouses(data)}
         >
           Show warehouses
         </Button>

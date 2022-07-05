@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Container } from 'react-bootstrap';
-import Slider from './components/App/Slider';
-import Menu from './components/App/Menu';
-import AlertHelp from './components/App/AlertHelp';
+import Slider from './components/app/Slider';
+import Menu from './components/app/Menu';
+import AlertHelp from './components/app/AlertHelp';
 
 export default function App() {
   const [content, setContent] = useState(null);

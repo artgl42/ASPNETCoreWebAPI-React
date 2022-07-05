@@ -1,68 +1,40 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Stack, Row, Accordion } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Stack, Row, Col } from 'react-bootstrap';
 import Urls from '../util/Urls';
+import useFetch from '../hooks/useFetch';
 import LoadSpinner from '../util/LoadSpinner';
-import ProductsOfWarehouse from './ProductsOfWarehouse';
 import WarehouseCard from './WarehouseCard';
 
 export default function WarehouseCards() {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { data, loading, error } = useFetch(Urls.API_URL_GET_ALL_WAREHOUSES);
   const [warehouses, setWarehouses] = useState([]);
-  const [products, setProducts] = useState(null);
-
-  const showProductsForWarehouse = useCallback((warehouseId) => {
-    setProducts(null);
-    setProducts(<ProductsOfWarehouse id={warehouseId} />);
-  }, [setProducts]);
 
   useEffect(() => {
-    fetch(Urls.API_URL_GET_ALL_WAREHOUSES)
-      .then((result) => result.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setWarehouses(result);
-        },
-        (err) => {
-          setIsLoaded(true);
-          setError(err);
-        },
-      );
-  }, []);
+    if (!loading) {
+      setWarehouses(data);
+    }
+  }, [loading, data]);
 
   if (error) {
-    return (
-      <Stack>
-        Ошибка:
-        {error.message}
-      </Stack>
-    );
+    // eslint-disable-next-line no-console
+    console.log('Error!!!', error);
+    return null;
   }
-  if (!isLoaded) return <LoadSpinner />;
+  if (loading) return <LoadSpinner />;
   return (
     <Stack>
-      <Accordion defaultActiveKey="0" flush>
-        <Accordion.Item eventKey="0">
-          <Accordion.Header>Warehouses</Accordion.Header>
-          <Accordion.Body>
-            <Row md={4}>
-              {warehouses.map((w) => (
-                <WarehouseCard
-                  key={w.id}
-                  id={w.id}
-                  name={w.name}
-                  address={w.address}
-                  func={showProductsForWarehouse}
-                />
-              ))}
-            </Row>
-          </Accordion.Body>
-        </Accordion.Item>
-        <Row className="mt-4">
-          {products}
-        </Row>
-      </Accordion>
+      <Row className="ms-1 my-0 me-0 p-0">
+        {warehouses !== null && warehouses.map((w) => (
+          <Col className="ms-0 my-1 me-1 p-0">
+            <WarehouseCard
+              key={w.id}
+              id={w.id}
+              name={w.name}
+              address={w.address}
+            />
+          </Col>
+        ))}
+      </Row>
     </Stack>
   );
 }

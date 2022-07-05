@@ -1,40 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
 import Urls from '../util/Urls';
+import useFetch from '../hooks/useFetch';
 import LoadSpinner from '../util/LoadSpinner';
 import ProductRow from './ProductRow';
 
-export default function ProductTable() {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+export default function ProductsTable() {
+  const { data, loading, error } = useFetch(Urls.API_URL_GET_ALL_PRODUCTS);
   const [products, setProducts] = useState([]);
 
-  useEffect(() => {
-    fetch(Urls.API_URL_GET_ALL_PRODUCTS)
-      .then((result) => result.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setProducts(result);
-        },
-        (err) => {
-          setIsLoaded(true);
-          setError(err);
-        },
-      );
-  }, [isLoaded]);
-
   if (error) {
-    return (
-      <Stack>
-        Ошибка:
-        {error.message}
-      </Stack>
-    );
+    // eslint-disable-next-line no-console
+    console.log('Error!!!', error);
+    return null;
   }
-  if (!isLoaded) return <LoadSpinner />;
+  if (loading) return <LoadSpinner />;
   return (
     <Stack>
       <Table striped hover size="sm">
@@ -47,7 +29,7 @@ export default function ProductTable() {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
+          {products !== null && products.map((product) => (
             <ProductRow
               key={product.id}
               id={product.id}
@@ -61,7 +43,7 @@ export default function ProductTable() {
         <Button
           variant="outline-primary"
           size="sm"
-          onClick={() => setIsLoaded(false)}
+          onClick={() => setProducts(data)}
         >
           Show products
         </Button>

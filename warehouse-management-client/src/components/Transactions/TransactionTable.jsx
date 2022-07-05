@@ -1,40 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
 import Urls from '../util/Urls';
+import useFetch from '../hooks/useFetch';
 import LoadSpinner from '../util/LoadSpinner';
 import TransactionRow from './TransactionRow';
 
 export default function TransactionTable() {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { data, loading, error } = useFetch(Urls.API_URL_GET_ALL_TRANSACTIONS);
   const [transactions, setTransactions] = useState([]);
 
-  useEffect(() => {
-    fetch(Urls.API_URL_GET_ALL_TRANSACTIONS)
-      .then((result) => result.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setTransactions(result);
-        },
-        (err) => {
-          setIsLoaded(true);
-          setError(err);
-        },
-      );
-  }, [isLoaded]);
-
   if (error) {
-    return (
-      <Stack>
-        Ошибка:
-        {error.message}
-      </Stack>
-    );
+    // eslint-disable-next-line no-console
+    console.log('Error!!!', error);
+    return null;
   }
-  if (!isLoaded) return <LoadSpinner />;
+  if (loading) return <LoadSpinner />;
   return (
     <Stack>
       <Table striped hover size="sm">
@@ -50,7 +32,7 @@ export default function TransactionTable() {
           </tr>
         </thead>
         <tbody>
-          {transactions.map((transaction) => (
+          {transactions !== null && transactions.map((transaction) => (
             <TransactionRow
               key={transaction.id}
               id={transaction.id}
@@ -67,7 +49,7 @@ export default function TransactionTable() {
         <Button
           variant="outline-primary"
           size="sm"
-          onClick={() => setIsLoaded(false)}
+          onClick={() => setTransactions(data)}
         >
           Show transactions
         </Button>
