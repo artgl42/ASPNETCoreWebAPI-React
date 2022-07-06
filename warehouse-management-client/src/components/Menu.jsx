@@ -1,19 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   Container, Nav, Navbar, NavDropdown,
 } from 'react-bootstrap';
-import ProductsTable from './ProductsTable';
-import WarehouseTable from './WarehouseTable';
-import TransactionTable from './TransactionTable';
-import WarehouseCards from './reports/WarehouseCards';
 import Logo from './imgs/warehouse.svg';
+import { useReducerContext } from './hooks/useReducerContext';
 
-export default function Menu({ setContent, help, setHelp }) {
+export default function Menu() {
+  const { dispatch } = useReducerContext();
+
   return (
     <Navbar bg="dark" variant="dark" className="py-2">
       <Container>
-        <Nav.Link onClick={() => setContent(null)} className="px-2 py-0">
+        <Nav.Link onClick={() => dispatch({ type: 'Null' })} className="px-2 py-0">
           <img
             src={Logo}
             alt="Logo"
@@ -22,12 +20,12 @@ export default function Menu({ setContent, help, setHelp }) {
           />
         </Nav.Link>
         <Nav className="me-auto">
-          <Nav.Link onClick={() => setContent(<ProductsTable />)}>Products</Nav.Link>
-          <Nav.Link onClick={() => setContent(<WarehouseTable />)}>Warehouses</Nav.Link>
-          <Nav.Link onClick={() => setContent(<TransactionTable />)}>Transactions</Nav.Link>
+          <Nav.Link onClick={() => dispatch({ type: 'ProductsTable' })}>Products</Nav.Link>
+          <Nav.Link onClick={() => dispatch({ type: 'WarehousesTable' })}>Warehouses</Nav.Link>
+          <Nav.Link onClick={() => dispatch({ type: 'TransactionsTable' })}>Transactions</Nav.Link>
           <NavDropdown title="Reports" className="m-0">
             <NavDropdown.Item
-              onClick={() => setContent(<WarehouseCards setContent={setContent} />)}
+              onClick={() => dispatch({ type: 'WarehouseCards', dispatch: { dispatch } })}
             >
               Balance (Products)
             </NavDropdown.Item>
@@ -38,14 +36,8 @@ export default function Menu({ setContent, help, setHelp }) {
               Report 3
             </NavDropdown.Item>
           </NavDropdown>
-          <Nav.Link onClick={() => setHelp(!help)}>?</Nav.Link>
         </Nav>
       </Container>
     </Navbar>
   );
 }
-Menu.propTypes = {
-  help: PropTypes.bool.isRequired,
-  setContent: PropTypes.func.isRequired,
-  setHelp: PropTypes.func.isRequired,
-};

@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import {
   Table, Stack, Row, Col,
 } from 'react-bootstrap';
-import Urls from '../utils/Urls';
+import { API_URL_GET_ALL_PRODUCTS_ON_DATE } from '../utils/API';
 import useFetch from '../hooks/useFetch';
 import LoadSpinner from '../utils/LoadSpinner';
 
@@ -17,7 +18,7 @@ export default function BalanceProducts({ id }) {
 
   const {
     data, loading, fetchData,
-  } = useFetch(`${Urls.API_URL_GET_ALL_PRODUCTS_ON_DATE}/${getFormatedDate(date)}/${id}`);
+  } = useFetch(`${API_URL_GET_ALL_PRODUCTS_ON_DATE}/${getFormatedDate(date)}/${id}`);
 
   useEffect(() => {
     if (!loading) {
@@ -27,7 +28,7 @@ export default function BalanceProducts({ id }) {
 
   function handleChangeDate(e) {
     setDate(e.target.value);
-    fetchData(`${Urls.API_URL_GET_ALL_PRODUCTS_ON_DATE}/${getFormatedDate(e.target.value)}/${id}`);
+    fetchData(`${API_URL_GET_ALL_PRODUCTS_ON_DATE}/${getFormatedDate(e.target.value)}/${id}`);
   }
 
   if (loading) return <LoadSpinner />;
@@ -64,6 +65,3 @@ export default function BalanceProducts({ id }) {
     </Stack>
   );
 }
-BalanceProducts.propTypes = {
-  id: PropTypes.string.isRequired,
-};

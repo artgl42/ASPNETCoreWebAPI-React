@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
-import Urls from './utils/Urls';
+import { API_URL_GET_ALL_TRANSACTIONS } from './utils/API';
 import useFetch from './hooks/useFetch';
 import LoadSpinner from './utils/LoadSpinner';
 
-export default function WarehouseTable() {
-  const { data, loading, error } = useFetch(Urls.API_URL_GET_ALL_WAREHOUSES);
-  const [warehouses, setWarehouses] = useState([]);
+export default function TransactionsTable() {
+  const { data, loading, error } = useFetch(API_URL_GET_ALL_TRANSACTIONS);
+  const [transactions, setTransactions] = useState([]);
 
   if (error) {
     // eslint-disable-next-line no-console
@@ -22,17 +22,23 @@ export default function WarehouseTable() {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Address</th>
+            <th>Date</th>
+            <th>From</th>
+            <th>In</th>
+            <th>Product</th>
+            <th>Count</th>
             <th>Operation</th>
           </tr>
         </thead>
         <tbody>
-          {warehouses !== null && warehouses.map((w) => (
-            <tr key={w.id}>
-              <td>{w.id}</td>
-              <td>{w.name}</td>
-              <td>{w.address}</td>
+          {transactions !== null && transactions.map((t) => (
+            <tr key={t.id}>
+              <td>{t.id}</td>
+              <td>{t.dateTime}</td>
+              <td>{t.warehouseFrom.name}</td>
+              <td>{t.warehouseIn.name}</td>
+              <td>{t.product.name}</td>
+              <td>{t.coun}</td>
               <td>
                 <Button
                   className="mx-1 my-0"
@@ -56,21 +62,21 @@ export default function WarehouseTable() {
         <Button
           variant="outline-primary"
           size="sm"
-          onClick={() => setWarehouses(data)}
+          onClick={() => setTransactions(data)}
         >
-          Show warehouses
+          Show transactions
         </Button>
         <Button
           variant="outline-success"
           size="sm"
-          onClick={() => setWarehouses([])}
+          onClick={() => setTransactions([])}
         >
-          Add warehouse
+          Add transaction
         </Button>
         <Button
           variant="outline-danger"
           size="sm"
-          onClick={() => setWarehouses([])}
+          onClick={() => setTransactions([])}
         >
           Clear table
         </Button>

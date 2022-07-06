@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
+import React, { useReducer, useMemo } from 'react';
 import { Container } from 'react-bootstrap';
 import Slider from './components/utils/Slider';
 import Menu from './components/Menu';
-import AlertHelp from './components/AlertHelp';
+import ReducerContext from './components/hooks/useReducerContext';
+import reducer from './components/utils/reducer';
 
 export default function App() {
-  const [content, setContent] = useState(null);
-  const [help, setHelp] = useState(false);
+  const initialState = { data: null };
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const providerDispatch = useMemo(() => ({ dispatch }), []);
 
   return (
     <Container>
       <Slider />
-      <AlertHelp help={help} setHelp={setHelp} />
-      <Menu setContent={setContent} help={help} setHelp={setHelp} />
-      {content}
+      <ReducerContext.Provider value={providerDispatch}>
+        <Menu />
+        {state.data}
+      </ReducerContext.Provider>
     </Container>
   );
 }

@@ -1,27 +1,23 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import {
   Stack, Row, Col, Card, Button,
 } from 'react-bootstrap';
-import Urls from '../utils/Urls';
+import { API_URL_GET_ALL_WAREHOUSES } from '../utils/API';
 import useFetch from '../hooks/useFetch';
 import LoadSpinner from '../utils/LoadSpinner';
 import WarehouseImage from '../imgs/warehouse.png';
-import BalanceProducts from './BalanceProducts';
+import { useReducerContext } from '../hooks/useReducerContext';
 
-export default function WarehouseCards({ setContent }) {
-  const { data, loading, error } = useFetch(Urls.API_URL_GET_ALL_WAREHOUSES);
+export default function WarehouseCards() {
+  const { data, loading, error } = useFetch(API_URL_GET_ALL_WAREHOUSES);
   const [warehouses, setWarehouses] = useState([]);
+  const { dispatch } = useReducerContext();
 
   useEffect(() => {
     if (!loading) {
       setWarehouses(data);
     }
   }, [loading, data]);
-
-  function onClick(e) {
-    setContent(<BalanceProducts id={e.target.value} />);
-  }
 
   if (error) {
     // eslint-disable-next-line no-console
@@ -43,7 +39,7 @@ export default function WarehouseCards({ setContent }) {
                   value={w.id}
                   variant="outline-success"
                   size="sm"
-                  onClick={(e) => onClick(e)}
+                  onClick={() => dispatch({ type: 'BalanceProducts', id: w.id })}
                 >
                   Products...
                 </Button>

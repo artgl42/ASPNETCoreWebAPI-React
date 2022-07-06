@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
-import Urls from './utils/Urls';
+import { API_URL_GET_ALL_PRODUCTS } from './utils/API';
 import useFetch from './hooks/useFetch';
 import LoadSpinner from './utils/LoadSpinner';
 
 export default function ProductsTable() {
-  const { data, loading, error } = useFetch(Urls.API_URL_GET_ALL_PRODUCTS);
+  const { data, loading, error } = useFetch(API_URL_GET_ALL_PRODUCTS);
   const [products, setProducts] = useState([]);
 
   if (error) {
