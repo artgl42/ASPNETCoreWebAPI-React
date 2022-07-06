@@ -12,15 +12,9 @@ const useFetch = (url, options) => {
   function fetchData(url, options) {
     setStatus({ loading: true });
     fetch(url, options)
-      .then((result) => {
-        switch (result.status) {
-          case 200:
-            return result.json();
-          case 204:
-            return result.json();
-          default:
-            throw new Error(result.status);
-        }
+      .then((response) => {
+        if (!response.ok) throw new Error(response.status);
+        else return response.json();
       })
       .then((result) => {
         setStatus({ loading: false, data: result });

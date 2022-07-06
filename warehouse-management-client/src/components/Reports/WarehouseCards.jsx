@@ -1,11 +1,15 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-import { Stack, Row, Col } from 'react-bootstrap';
-import Urls from '../util/Urls';
+import {
+  Stack, Row, Col, Card, Button,
+} from 'react-bootstrap';
+import Urls from '../utils/Urls';
 import useFetch from '../hooks/useFetch';
-import LoadSpinner from '../util/LoadSpinner';
-import WarehouseCard from './WarehouseCard';
+import LoadSpinner from '../utils/LoadSpinner';
+import WarehouseImage from '../imgs/warehouse.png';
+import BalanceProducts from './BalanceProducts';
 
-export default function WarehouseCards() {
+export default function WarehouseCards({ setContent }) {
   const { data, loading, error } = useFetch(Urls.API_URL_GET_ALL_WAREHOUSES);
   const [warehouses, setWarehouses] = useState([]);
 
@@ -14,6 +18,10 @@ export default function WarehouseCards() {
       setWarehouses(data);
     }
   }, [loading, data]);
+
+  function onClick(e) {
+    setContent(<BalanceProducts id={e.target.value} />);
+  }
 
   if (error) {
     // eslint-disable-next-line no-console
@@ -25,13 +33,22 @@ export default function WarehouseCards() {
     <Stack>
       <Row className="ms-1 my-0 me-0 p-0">
         {warehouses !== null && warehouses.map((w) => (
-          <Col className="ms-0 my-1 me-1 p-0">
-            <WarehouseCard
-              key={w.id}
-              id={w.id}
-              name={w.name}
-              address={w.address}
-            />
+          <Col key={w.id} className="ms-0 my-1 me-1 p-0">
+            <Card>
+              <Card.Img variant="top" src={WarehouseImage} />
+              <Card.Body>
+                <Card.Title>{w.id}</Card.Title>
+                <Card.Text>{`${w.name} : ${w.address}`}</Card.Text>
+                <Button
+                  value={w.id}
+                  variant="outline-success"
+                  size="sm"
+                  onClick={(e) => onClick(e)}
+                >
+                  Products...
+                </Button>
+              </Card.Body>
+            </Card>
           </Col>
         ))}
       </Row>

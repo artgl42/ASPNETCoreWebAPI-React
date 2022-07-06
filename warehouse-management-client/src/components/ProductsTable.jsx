@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
-import Urls from '../util/Urls';
-import useFetch from '../hooks/useFetch';
-import LoadSpinner from '../util/LoadSpinner';
-import ProductRow from './ProductRow';
+import Urls from './utils/Urls';
+import useFetch from './hooks/useFetch';
+import LoadSpinner from './utils/LoadSpinner';
 
 export default function ProductsTable() {
   const { data, loading, error } = useFetch(Urls.API_URL_GET_ALL_PRODUCTS);
@@ -22,20 +21,34 @@ export default function ProductsTable() {
       <Table striped hover size="sm">
         <thead>
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Price</th>
-            <th scope="col">Operation</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Operation</th>
           </tr>
         </thead>
         <tbody>
-          {products !== null && products.map((product) => (
-            <ProductRow
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              price={product.price}
-            />
+          {products !== null && products.map((p) => (
+            <tr key={p.id}>
+              <td>{p.id}</td>
+              <td>{p.name}</td>
+              <td>{p.price}</td>
+              <td>
+                <Button
+                  className="mx-1 my-0"
+                  variant="outline-success"
+                  size="sm"
+                >
+                  Update
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                >
+                  Delete
+                </Button>
+              </td>
+            </tr>
           ))}
         </tbody>
       </Table>

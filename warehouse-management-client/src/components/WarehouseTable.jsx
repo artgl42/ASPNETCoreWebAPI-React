@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
-import Urls from '../util/Urls';
-import useFetch from '../hooks/useFetch';
-import LoadSpinner from '../util/LoadSpinner';
-import WarehouseRow from './WarehouseRow';
+import Urls from './utils/Urls';
+import useFetch from './hooks/useFetch';
+import LoadSpinner from './utils/LoadSpinner';
 
 export default function WarehouseTable() {
   const { data, loading, error } = useFetch(Urls.API_URL_GET_ALL_WAREHOUSES);
@@ -22,20 +21,34 @@ export default function WarehouseTable() {
       <Table striped hover size="sm">
         <thead>
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Address</th>
-            <th scope="col">Operation</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Operation</th>
           </tr>
         </thead>
         <tbody>
-          {warehouses !== null && warehouses.map((warehouse) => (
-            <WarehouseRow
-              key={warehouse.id}
-              id={warehouse.id}
-              name={warehouse.name}
-              address={warehouse.address}
-            />
+          {warehouses !== null && warehouses.map((w) => (
+            <tr key={w.id}>
+              <td>{w.id}</td>
+              <td>{w.name}</td>
+              <td>{w.address}</td>
+              <td>
+                <Button
+                  className="mx-1 my-0"
+                  variant="outline-success"
+                  size="sm"
+                >
+                  Update
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                >
+                  Delete
+                </Button>
+              </td>
+            </tr>
           ))}
         </tbody>
       </Table>

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {
   Container, Nav, Navbar, NavDropdown,
 } from 'react-bootstrap';
-import ProductsTable from '../products/ProductsTable';
-import WarehouseTable from '../warehouses/WarehouseTable';
-import TransactionTable from '../transactions/TransactionTable';
-import WarehouseCards from '../reports/WarehouseCards';
-import Logo from '../imgs/warehouse.svg';
+import ProductsTable from './ProductsTable';
+import WarehouseTable from './WarehouseTable';
+import TransactionTable from './TransactionTable';
+import WarehouseCards from './reports/WarehouseCards';
+import Logo from './imgs/warehouse.svg';
 
 export default function Menu({ setContent, help, setHelp }) {
   return (
@@ -27,9 +27,9 @@ export default function Menu({ setContent, help, setHelp }) {
           <Nav.Link onClick={() => setContent(<TransactionTable />)}>Transactions</Nav.Link>
           <NavDropdown title="Reports" className="m-0">
             <NavDropdown.Item
-              onClick={() => setContent(<WarehouseCards />)}
+              onClick={() => setContent(<WarehouseCards setContent={setContent} />)}
             >
-              Products in Warehouse
+              Balance (Products)
             </NavDropdown.Item>
             <NavDropdown.Item disabled>
               Report 2

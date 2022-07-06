@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
-import Urls from '../util/Urls';
-import useFetch from '../hooks/useFetch';
-import LoadSpinner from '../util/LoadSpinner';
-import TransactionRow from './TransactionRow';
+import Urls from './utils/Urls';
+import useFetch from './hooks/useFetch';
+import LoadSpinner from './utils/LoadSpinner';
 
 export default function TransactionTable() {
   const { data, loading, error } = useFetch(Urls.API_URL_GET_ALL_TRANSACTIONS);
@@ -22,26 +21,40 @@ export default function TransactionTable() {
       <Table striped hover size="sm">
         <thead>
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Date</th>
-            <th scope="col">From</th>
-            <th scope="col">In</th>
-            <th scope="col">Product</th>
-            <th scope="col">Count</th>
-            <th scope="col">Operation</th>
+            <th>ID</th>
+            <th>Date</th>
+            <th>From</th>
+            <th>In</th>
+            <th>Product</th>
+            <th>Count</th>
+            <th>Operation</th>
           </tr>
         </thead>
         <tbody>
-          {transactions !== null && transactions.map((transaction) => (
-            <TransactionRow
-              key={transaction.id}
-              id={transaction.id}
-              date={transaction.dateTime}
-              warehouseFrom={transaction.warehouseFrom.name}
-              warehouseIn={transaction.warehouseIn.name}
-              product={transaction.product.name}
-              count={transaction.count}
-            />
+          {transactions !== null && transactions.map((t) => (
+            <tr key={t.id}>
+              <td>{t.id}</td>
+              <td>{t.dateTime}</td>
+              <td>{t.warehouseFrom.name}</td>
+              <td>{t.warehouseIn.name}</td>
+              <td>{t.product.name}</td>
+              <td>{t.coun}</td>
+              <td>
+                <Button
+                  className="mx-1 my-0"
+                  variant="outline-success"
+                  size="sm"
+                >
+                  Update
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                >
+                  Delete
+                </Button>
+              </td>
+            </tr>
           ))}
         </tbody>
       </Table>
