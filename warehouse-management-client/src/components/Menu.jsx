@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Container, Nav, Navbar, NavDropdown,
+  Container, Nav, Navbar, Image,
 } from 'react-bootstrap';
 import Logo from './imgs/warehouse.svg';
 import { useReducerContext } from './hooks/useReducerContext';
@@ -12,8 +12,11 @@ export default function Menu() {
     <Navbar bg="dark" variant="dark" className="py-2" expand="sm">
       <Container>
         <Navbar.Brand>
-          <Nav.Link onClick={() => dispatch({ type: 'Null' })} className="px-2 py-0">
-            <img
+          <Nav.Link
+            className="px-2 py-0"
+            onClick={() => dispatch({ type: 'Null' })}
+          >
+            <Image
               src={Logo}
               alt="Logo"
               width="50"
@@ -21,25 +24,12 @@ export default function Menu() {
             />
           </Nav.Link>
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Toggle />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link onClick={() => dispatch({ type: 'ProductsTable' })}>Products</Nav.Link>
-            <Nav.Link onClick={() => dispatch({ type: 'WarehousesTable' })}>Warehouses</Nav.Link>
             <Nav.Link onClick={() => dispatch({ type: 'TransactionsTable' })}>Transactions</Nav.Link>
-            <NavDropdown title="Reports" className="m-0">
-              <NavDropdown.Item
-                onClick={() => dispatch({ type: 'WarehouseCards', dispatch: { dispatch } })}
-              >
-                Products (balance)
-              </NavDropdown.Item>
-              <NavDropdown.Item disabled>
-                Report 2
-              </NavDropdown.Item>
-              <NavDropdown.Item disabled>
-                Report 3
-              </NavDropdown.Item>
-            </NavDropdown>
+            <Nav.Link onClick={() => dispatch({ type: 'ProductsTable' })}>Products</Nav.Link>
+            <Nav.Link onClick={() => dispatch({ type: 'WarehouseCards', dispatch: { dispatch } })}>Warehouses</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

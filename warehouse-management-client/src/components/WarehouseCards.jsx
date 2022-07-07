@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Stack, Row, Col, Card, Button,
+  Stack, Row, Col, Card,
 } from 'react-bootstrap';
-import { API_URL_GET_ALL_WAREHOUSES } from '../constants/API';
-import useFetch from '../hooks/useFetch';
-import LoadSpinner from '../utils/LoadSpinner';
-import WarehouseImage from '../imgs/warehouse.png';
-import { useReducerContext } from '../hooks/useReducerContext';
+import { API_URL_GET_ALL_WAREHOUSES } from './constants/API';
+import useFetch from './hooks/useFetch';
+import LoadSpinner from './utils/LoadSpinner';
+import WarehouseImage from './imgs/warehouse.png';
+import ButtonsGroup from './ButtonsGroup';
 
 export default function WarehouseCards() {
   const { data, loading, error } = useFetch(API_URL_GET_ALL_WAREHOUSES);
   const [warehouses, setWarehouses] = useState([]);
-  const { dispatch } = useReducerContext();
 
   useEffect(() => {
     if (!loading) {
@@ -35,14 +34,7 @@ export default function WarehouseCards() {
               <Card.Body>
                 <Card.Title>{w.id}</Card.Title>
                 <Card.Text>{`${w.name} : ${w.address}`}</Card.Text>
-                <Button
-                  value={w.id}
-                  variant="outline-success"
-                  size="sm"
-                  onClick={() => dispatch({ type: 'BalanceProducts', id: w.id })}
-                >
-                  Products...
-                </Button>
+                <ButtonsGroup warehouseId={w.id} />
               </Card.Body>
             </Card>
           </Col>

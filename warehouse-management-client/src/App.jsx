@@ -4,10 +4,9 @@ import Slider from './components/utils/Slider';
 import Menu from './components/Menu';
 import ReducerContext from './components/hooks/useReducerContext';
 import ProductsTable from './components/ProductsTable';
-import WarehousesTable from './components/WarehousesTable';
 import TransactionsTable from './components/TransactionsTable';
-import WarehouseCards from './components/reports/WarehouseCards';
-import BalanceProducts from './components/reports/BalanceProducts';
+import WarehouseCards from './components/WarehouseCards';
+import BalanceProducts from './components/BalanceProducts';
 import DataView from './components/DataView';
 
 function reducer(_view, action) {
@@ -20,17 +19,13 @@ function reducer(_view, action) {
       return {
         dataView: <ProductsTable />,
       };
-    case 'WarehousesTable':
+    case 'WarehouseCards':
       return {
-        dataView: <WarehousesTable />,
+        dataView: <WarehouseCards />,
       };
     case 'TransactionsTable':
       return {
         dataView: <TransactionsTable />,
-      };
-    case 'WarehouseCards':
-      return {
-        dataView: <WarehouseCards />,
       };
     case 'BalanceProducts':
       return {
