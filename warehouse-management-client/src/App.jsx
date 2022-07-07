@@ -8,38 +8,33 @@ import WarehousesTable from './components/WarehousesTable';
 import TransactionsTable from './components/TransactionsTable';
 import WarehouseCards from './components/reports/WarehouseCards';
 import BalanceProducts from './components/reports/BalanceProducts';
+import DataView from './components/DataView';
 
-function reducer(state, action) {
+function reducer(_view, action) {
   switch (action.type) {
     case 'Null':
       return {
-        ...state,
-        data: null,
+        dataView: null,
       };
     case 'ProductsTable':
       return {
-        ...state,
-        data: <ProductsTable />,
+        dataView: <ProductsTable />,
       };
     case 'WarehousesTable':
       return {
-        ...state,
-        data: <WarehousesTable />,
+        dataView: <WarehousesTable />,
       };
     case 'TransactionsTable':
       return {
-        ...state,
-        data: <TransactionsTable />,
+        dataView: <TransactionsTable />,
       };
     case 'WarehouseCards':
       return {
-        ...state,
-        data: <WarehouseCards />,
+        dataView: <WarehouseCards />,
       };
     case 'BalanceProducts':
       return {
-        ...state,
-        data: <BalanceProducts id={action.id} />,
+        dataView: <BalanceProducts id={action.id} />,
       };
     default:
       throw new Error();
@@ -47,16 +42,16 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const initialState = { data: null };
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const providerDispatch = useMemo(() => ({ dispatch }), []);
+  const initView = { dataView: null };
+  const [view, dispatch] = useReducer(reducer, initView);
+  const viewManager = useMemo(() => ({ view, dispatch }), [view]);
 
   return (
     <Container>
       <Slider />
-      <ReducerContext.Provider value={providerDispatch}>
+      <ReducerContext.Provider value={viewManager}>
         <Menu />
-        {state.data}
+        <DataView />
       </ReducerContext.Provider>
     </Container>
   );

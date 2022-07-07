@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Table, Stack, Row, Col,
 } from 'react-bootstrap';
-import { API_URL_GET_ALL_PRODUCTS_ON_DATE } from '../utils/API';
+import { API_URL_GET_ALL_PRODUCTS_ON_DATE } from '../constants/API';
 import useFetch from '../hooks/useFetch';
 import LoadSpinner from '../utils/LoadSpinner';
 
