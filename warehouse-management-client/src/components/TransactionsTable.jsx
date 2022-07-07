@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
@@ -9,6 +9,12 @@ import LoadSpinner from './utils/LoadSpinner';
 export default function TransactionsTable() {
   const { data, loading, error } = useFetch(API_URL_GET_ALL_TRANSACTIONS);
   const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    if (!loading) {
+      setTransactions(data);
+    }
+  }, [loading, data]);
 
   if (error) {
     // eslint-disable-next-line no-console

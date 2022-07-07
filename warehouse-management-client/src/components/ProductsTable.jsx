@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Stack, Table, Button, ButtonGroup,
 } from 'react-bootstrap';
@@ -9,6 +9,12 @@ import LoadSpinner from './utils/LoadSpinner';
 export default function ProductsTable() {
   const { data, loading, error } = useFetch(API_URL_GET_ALL_PRODUCTS);
   const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    if (!loading) {
+      setProducts(data);
+    }
+  }, [loading, data]);
 
   if (error) {
     // eslint-disable-next-line no-console
