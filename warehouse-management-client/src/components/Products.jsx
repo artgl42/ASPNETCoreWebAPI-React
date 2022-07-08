@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Stack, Table, Button, ButtonGroup,
+  Stack, ListGroup, Button, ButtonGroup,
 } from 'react-bootstrap';
 import { API_URL_GET_ALL_PRODUCTS } from './constants/API';
 import useFetch from './hooks/useFetch';
-import LoadSpinner from './utils/LoadSpinner';
+import LoadSpinner from './UI/LoadSpinner';
 
-export default function ProductsTable() {
+export default function Products() {
   const { data, loading, error } = useFetch(API_URL_GET_ALL_PRODUCTS);
   const [products, setProducts] = useState([]);
 
@@ -24,40 +24,31 @@ export default function ProductsTable() {
   if (loading) return <LoadSpinner />;
   return (
     <Stack>
-      <Table striped hover size="sm">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Operation</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products !== null && products.map((p) => (
-            <tr key={p.id}>
-              <td>{p.id}</td>
-              <td>{p.name}</td>
-              <td>{p.price}</td>
-              <td>
-                <Button
-                  className="mx-1 my-0"
-                  variant="outline-success"
-                  size="sm"
-                >
-                  Update
-                </Button>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <ListGroup as="ol" numbered variant="flush">
+        {products !== null && products.map((product) => (
+          <ListGroup.Item as="li" key={product.id} className="d-flex">
+            <Stack className="ms-2 me-auto">
+              {`${product.name}`}
+            </Stack>
+            <Stack>
+              {`${product.price}`}
+            </Stack>
+            <Button
+              size="sm"
+              variant="outline-success"
+              className="mx-1 my-0"
+            >
+              Update
+            </Button>
+            <Button
+              size="sm"
+              variant="outline-danger"
+            >
+              Delete
+            </Button>
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
       <ButtonGroup vertical>
         <Button
           variant="outline-primary"

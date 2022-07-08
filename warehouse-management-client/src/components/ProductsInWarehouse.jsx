@@ -1,13 +1,13 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
   Stack, ListGroup, Badge, Breadcrumb,
 } from 'react-bootstrap';
 import { API_URL_GET_ALL_PRODUCTS_ON_DATE } from './constants/API';
 import useFetch from './hooks/useFetch';
-import LoadSpinner from './utils/LoadSpinner';
+import LoadSpinner from './UI/LoadSpinner';
 
-export default function BalanceProducts({ id }) {
+export default function ProductsInWarehouse({ id }) {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [products, setProducts] = useState([]);
 
@@ -71,3 +71,6 @@ export default function BalanceProducts({ id }) {
     </Stack>
   );
 }
+ProductsInWarehouse.propTypes = {
+  id: PropTypes.number.isRequired,
+};

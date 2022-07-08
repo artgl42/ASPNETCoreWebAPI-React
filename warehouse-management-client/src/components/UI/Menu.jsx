@@ -2,8 +2,8 @@ import React from 'react';
 import {
   Container, Nav, Navbar, Image,
 } from 'react-bootstrap';
-import Logo from './imgs/warehouse.svg';
-import { useReducerContext } from './hooks/useReducerContext';
+import Logo from '../imgs/warehouse.svg';
+import { useReducerContext } from '../hooks/useReducerContext';
 
 export default function Menu() {
   const { dispatch } = useReducerContext();

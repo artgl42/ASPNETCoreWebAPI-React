@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Stack, Row, Col, Card,
+  Stack, Row, Col, Card, Button,
 } from 'react-bootstrap';
+import { useReducerContext } from './hooks/useReducerContext';
 import { API_URL_GET_ALL_WAREHOUSES } from './constants/API';
 import useFetch from './hooks/useFetch';
-import LoadSpinner from './utils/LoadSpinner';
+import LoadSpinner from './UI/LoadSpinner';
 import WarehouseImage from './imgs/warehouse.png';
-import ButtonsGroup from './ButtonsGroup';
 
 export default function WarehouseCards() {
   const { data, loading, error } = useFetch(API_URL_GET_ALL_WAREHOUSES);
   const [warehouses, setWarehouses] = useState([]);
+  const { dispatch } = useReducerContext();
 
   useEffect(() => {
     if (!loading) {
@@ -32,9 +33,29 @@ export default function WarehouseCards() {
             <Card>
               <Card.Img variant="top" src={WarehouseImage} />
               <Card.Body>
-                <Card.Title>{w.id}</Card.Title>
-                <Card.Text>{`${w.name} : ${w.address}`}</Card.Text>
-                <ButtonsGroup warehouseId={w.id} />
+                <Card.Title>{w.name}</Card.Title>
+                <Card.Text>{w.address}</Card.Text>
+                <Stack gap={1}>
+                  <Button
+                    size="sm"
+                    variant="outline-primary"
+                    onClick={() => dispatch({ type: 'BalanceProducts', id: w.id })}
+                  >
+                    Show products
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline-success"
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline-danger"
+                  >
+                    Delete
+                  </Button>
+                </Stack>
               </Card.Body>
             </Card>
           </Col>
