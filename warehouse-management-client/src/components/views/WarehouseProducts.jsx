@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import {
   Stack, ListGroup, Badge, Breadcrumb,
 } from 'react-bootstrap';
-import { API_URL_GET_ALL_PRODUCTS_ON_DATE } from './constants/API';
-import useFetch from './hooks/useFetch';
-import LoadSpinner from './UI/LoadSpinner';
+import { API_URL_GET_ALL_PRODUCTS_ON_DATE } from '../constants/API';
+import useFetch from '../hooks/useFetch';
+import LoadSpinner from '../UI/LoadSpinner';
+import ErrorAlert from '../UI/ErrorAlert';
 
-export default function ProductsInWarehouse({ id }) {
+export default function WarehouseProducts({ id }) {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [products, setProducts] = useState([]);
 
@@ -16,7 +17,7 @@ export default function ProductsInWarehouse({ id }) {
   }
 
   const {
-    data, loading, fetchData,
+    data, loading, error, fetchData,
   } = useFetch(`${API_URL_GET_ALL_PRODUCTS_ON_DATE}/${getFormatedDate(date)}/${id}`);
 
   useEffect(() => {
@@ -30,6 +31,7 @@ export default function ProductsInWarehouse({ id }) {
     fetchData(`${API_URL_GET_ALL_PRODUCTS_ON_DATE}/${getFormatedDate(e.target.value)}/${id}`);
   }
 
+  if (error != null) return <ErrorAlert message={error.message} />;
   if (loading) return <LoadSpinner />;
   return (
     <Stack className="my-2">
@@ -71,6 +73,6 @@ export default function ProductsInWarehouse({ id }) {
     </Stack>
   );
 }
-ProductsInWarehouse.propTypes = {
+WarehouseProducts.propTypes = {
   id: PropTypes.number.isRequired,
 };

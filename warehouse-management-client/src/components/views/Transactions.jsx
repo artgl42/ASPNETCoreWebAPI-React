@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import {
   Stack, ListGroup, Button, ButtonGroup,
 } from 'react-bootstrap';
-import { API_URL_GET_ALL_TRANSACTIONS } from './constants/API';
-import useFetch from './hooks/useFetch';
-import LoadSpinner from './UI/LoadSpinner';
+import { API_URL_GET_ALL_TRANSACTIONS } from '../constants/API';
+import useFetch from '../hooks/useFetch';
+import LoadSpinner from '../UI/LoadSpinner';
+import ErrorAlert from '../UI/ErrorAlert';
 
 export default function Transactions() {
   const { data, loading, error } = useFetch(API_URL_GET_ALL_TRANSACTIONS);
@@ -16,11 +17,7 @@ export default function Transactions() {
     }
   }, [loading, data]);
 
-  if (error) {
-    // eslint-disable-next-line no-console
-    console.log('Error!!!', error);
-    return null;
-  }
+  if (error != null) return <ErrorAlert message={error.message} />;
   if (loading) return <LoadSpinner />;
   return (
     <Stack>

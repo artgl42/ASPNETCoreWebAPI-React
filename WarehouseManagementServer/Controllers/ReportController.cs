@@ -23,16 +23,6 @@ namespace WarehouseManagementServer.Controllers
                         Count = transaction.Sum(transaction => transaction.Count)
                     }).ToListAsync();
 
-            if (_productsInWarehouse is null)
-            {
-                return NotFound();
-            }
-
-            if (_productsInWarehouse.Count == 0)
-            {
-                return NoContent();
-            }
-
             return Ok( _productsInWarehouse);
         }
     }

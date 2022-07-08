@@ -1,8 +1,8 @@
 import React from 'react';
-import Products from '../Products';
-import Transactions from '../Transactions';
-import WarehouseCards from '../WarehouseCards';
-import ProductsInWarehouse from '../ProductsInWarehouse';
+import Products from '../views/Products';
+import Transactions from '../views/Transactions';
+import Warehouses from '../views/Warehouses';
+import WarehouseProducts from '../views/WarehouseProducts';
 
 export default function Reducer(_view, action) {
   switch (action.type) {
@@ -16,7 +16,7 @@ export default function Reducer(_view, action) {
       };
     case 'WarehouseCards':
       return {
-        dataView: <WarehouseCards />,
+        dataView: <Warehouses />,
       };
     case 'TransactionsTable':
       return {
@@ -24,7 +24,7 @@ export default function Reducer(_view, action) {
       };
     case 'BalanceProducts':
       return {
-        dataView: <ProductsInWarehouse id={action.id} />,
+        dataView: <WarehouseProducts id={action.id} />,
       };
     default:
       throw new Error();

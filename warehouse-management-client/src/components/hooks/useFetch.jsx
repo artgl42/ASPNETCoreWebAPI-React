@@ -13,7 +13,7 @@ const useFetch = (url, options) => {
     setStatus({ loading: true });
     fetch(url, options)
       .then((response) => {
-        if (!response.ok) throw new Error(response.status);
+        if (!response.ok) throw new Error(response.statusText);
         else return response.json();
       })
       .then((result) => {

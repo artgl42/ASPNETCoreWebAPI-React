@@ -26,16 +26,6 @@ namespace WarehouseManagementServer.Controllers
                 })
                 .ToListAsync();
 
-            if (_transactions is null)
-            {
-                return NotFound();
-            }
-
-            if (_transactions.Count == 0)
-            {
-                return NoContent();
-            }
-
             return Ok(_transactions);
         }
 
@@ -44,11 +34,6 @@ namespace WarehouseManagementServer.Controllers
         {
             var _transaction = await _db.Transactions
                 .FirstOrDefaultAsync(transaction => transaction.ID == transactionID);
-
-            if (_transaction is null)
-            {
-                return NotFound();
-            }
 
             return Ok(_transaction);
         }

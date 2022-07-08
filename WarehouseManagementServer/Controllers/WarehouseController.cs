@@ -23,11 +23,6 @@ namespace WarehouseManagementServer.Controllers
             var _warehouse = await _db.Warehouses
                 .FirstOrDefaultAsync(warehouse => warehouse.ID == warehouseID);
 
-            if (_warehouse is null)
-            {
-                return NotFound();
-            }
-
             return Ok(_warehouse);
         }
 
