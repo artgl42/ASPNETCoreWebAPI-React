@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { Alert } from 'react-bootstrap';
+// @ts-nocheck
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { Alert } from "react-bootstrap";
 
 export default function ErrorAlert({ message }) {
   const [show, setShow] = useState(true);
@@ -9,9 +10,7 @@ export default function ErrorAlert({ message }) {
     return (
       <Alert variant="danger" onClose={() => setShow(false)} dismissible>
         <Alert.Heading>Oops, something went wrong!</Alert.Heading>
-        <p>
-          {message !== '' && `Error: ${message}`}
-        </p>
+        <p>{message !== "" && `Error: ${message}`}</p>
       </Alert>
     );
   }
@@ -21,5 +20,5 @@ ErrorAlert.propTypes = {
 };
 
 ErrorAlert.defaultProps = {
-  message: '',
+  message: "",
 };

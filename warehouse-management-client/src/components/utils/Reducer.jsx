@@ -1,28 +1,28 @@
-import React from 'react';
-import Products from '../views/Products';
-import Transactions from '../views/Transactions';
-import Warehouses from '../views/Warehouses';
-import WarehouseProducts from '../views/WarehouseProducts';
+import React from "react";
+import Products from "../views/Products";
+import Transactions from "../views/Transactions";
+import Warehouses from "../views/Warehouses";
+import WarehouseProducts from "../views/WarehouseProducts";
 
 export default function Reducer(_view, action) {
   switch (action.type) {
-    case 'Null':
+    case "Null":
       return {
         dataView: null,
       };
-    case 'ProductsTable':
+    case "ProductsTable":
       return {
         dataView: <Products />,
       };
-    case 'WarehouseCards':
+    case "WarehouseCards":
       return {
         dataView: <Warehouses />,
       };
-    case 'TransactionsTable':
+    case "TransactionsTable":
       return {
         dataView: <Transactions />,
       };
-    case 'BalanceProducts':
+    case "BalanceProducts":
       return {
         dataView: <WarehouseProducts id={action.id} />,
       };

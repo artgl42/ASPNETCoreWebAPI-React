@@ -1,10 +1,10 @@
-const API_URL_BASE = 'https://localhost:7182/api/';
+const API_URL_BASE = "https://localhost:7182/api/";
 
 const ENDPOINTS = {
-  GET_ALL_PRODUCTS: 'Product',
-  GET_ALL_WAREHOUSES: 'Warehouse',
-  GET_ALL_TRANSACTIONS: 'Transaction',
-  GET_ALL_PRODUCTS_ON_DATE: 'Report',
+  GET_ALL_PRODUCTS: "Product",
+  GET_ALL_WAREHOUSES: "Warehouse",
+  GET_ALL_TRANSACTIONS: "Transaction",
+  GET_ALL_PRODUCTS_ON_DATE: "Report",
 };
 
 export const API_URL_GET_ALL_PRODUCTS = `${API_URL_BASE}${ENDPOINTS.GET_ALL_PRODUCTS}`;

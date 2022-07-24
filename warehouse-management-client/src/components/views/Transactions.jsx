@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Stack, ListGroup, Button, ButtonGroup,
-} from 'react-bootstrap';
-import { API_URL_GET_ALL_TRANSACTIONS } from '../constants/API';
-import useFetch from '../hooks/useFetch';
-import LoadSpinner from '../UI/LoadSpinner';
-import ErrorAlert from '../UI/ErrorAlert';
+import React, { useState, useEffect } from "react";
+// @ts-ignore
+import { Stack, ListGroup, Button, ButtonGroup } from "react-bootstrap";
+import { API_URL_GET_ALL_TRANSACTIONS } from "../constants/API";
+import useFetch from "../hooks/useFetch";
+import LoadSpinner from "../UI/LoadSpinner";
+import ErrorAlert from "../UI/ErrorAlert";
 
 export default function Transactions() {
   const { data, loading, error } = useFetch(API_URL_GET_ALL_TRANSACTIONS);
@@ -22,38 +21,26 @@ export default function Transactions() {
   return (
     <Stack>
       <ListGroup as="ol" numbered variant="flush">
-        {transactions !== null && transactions.map((transaction) => (
-          <ListGroup.Item as="li" key={transaction.id} className="d-flex">
-            <Stack className="ms-2 me-auto">
-              {`${transaction.dateTime}`}
-            </Stack>
-            <Stack>
-              {`${transaction.warehouseFrom.name}`}
-            </Stack>
-            <Stack className="ms-2 me-auto">
-              {`${transaction.warehouseIn.name}`}
-            </Stack>
-            <Stack>
-              {`${transaction.product.name}`}
-            </Stack>
-            <Stack>
-              {`${transaction.count}`}
-            </Stack>
-            <Button
-              size="sm"
-              variant="outline-success"
-              className="mx-1 my-0"
-            >
-              Update
-            </Button>
-            <Button
-              size="sm"
-              variant="outline-danger"
-            >
-              Delete
-            </Button>
-          </ListGroup.Item>
-        ))}
+        {transactions !== null &&
+          transactions.map((transaction) => (
+            <ListGroup.Item as="li" key={transaction.id} className="d-flex">
+              <Stack className="ms-2 me-auto">
+                {`${transaction.dateTime}`}
+              </Stack>
+              <Stack>{`${transaction.warehouseFrom.name}`}</Stack>
+              <Stack className="ms-2 me-auto">
+                {`${transaction.warehouseIn.name}`}
+              </Stack>
+              <Stack>{`${transaction.product.name}`}</Stack>
+              <Stack>{`${transaction.count}`}</Stack>
+              <Button size="sm" variant="outline-success" className="mx-1 my-0">
+                Update
+              </Button>
+              <Button size="sm" variant="outline-danger">
+                Delete
+              </Button>
+            </ListGroup.Item>
+          ))}
       </ListGroup>
       <ButtonGroup vertical>
         <Button

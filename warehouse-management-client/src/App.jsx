@@ -1,9 +1,10 @@
-import React, { useReducer, useMemo } from 'react';
-import { Container } from 'react-bootstrap';
-import Slider from './components/UI/Slider';
-import Menu from './components/UI/Menu';
-import ReducerContext from './components/hooks/useReducerContext';
-import reducer from './components/utils/Reducer';
+import React, { useReducer, useMemo } from "react";
+// @ts-ignore
+import { Container } from "react-bootstrap";
+import Slider from "./components/UI/Slider";
+import Menu from "./components/UI/Menu";
+import ReducerContext from "./components/hooks/useReducerContext";
+import reducer from "./components/utils/Reducer";
 
 export default function App() {
   const initView = { dataView: null };

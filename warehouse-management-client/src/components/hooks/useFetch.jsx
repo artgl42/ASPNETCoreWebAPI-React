@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-shadow */
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const useFetch = (url, options) => {
   const [status, setStatus] = useState({
@@ -10,17 +8,17 @@ const useFetch = (url, options) => {
   });
 
   function fetchData(url, options) {
-    setStatus({ loading: true });
+    setStatus({ ...status, loading: true });
     fetch(url, options)
       .then((response) => {
         if (!response.ok) throw new Error(response.statusText);
         else return response.json();
       })
       .then((result) => {
-        setStatus({ loading: false, data: result });
+        setStatus({ ...status, loading: false, data: result });
       })
       .catch((error) => {
-        setStatus({ loading: false, error });
+        setStatus({ ...status, loading: false, error });
       });
   }
 
@@ -28,6 +26,7 @@ const useFetch = (url, options) => {
     if (url) {
       fetchData(url, options);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { ...status, fetchData };

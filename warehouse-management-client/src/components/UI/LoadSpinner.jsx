@@ -1,5 +1,6 @@
-import React from 'react';
-import { Stack, Spinner } from 'react-bootstrap';
+import React from "react";
+// @ts-ignore
+import { Stack, Spinner } from "react-bootstrap";
 
 export default function LoadSpinner() {
   return (

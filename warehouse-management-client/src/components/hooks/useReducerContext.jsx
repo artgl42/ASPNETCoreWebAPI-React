@@ -1,4 +1,5 @@
-import { createContext, useContext } from 'react';
+// @ts-nocheck
+import { createContext, useContext } from "react";
 
 const ReducerContext = createContext();
 
