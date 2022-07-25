@@ -47,7 +47,7 @@ namespace WarehouseManagementServer.Controllers
                 return BadRequest();
             }
 
-            if (!_db.Products.Any(warehouse => warehouse.ID == productToUpdate.ID))
+            if (!_db.Products.Any(product => product.ID == productToUpdate.ID))
             {
                 return NotFound();
             }

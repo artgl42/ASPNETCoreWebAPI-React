@@ -2,19 +2,22 @@
 import React, { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
-export default function ProductForm({ show, setShow, createProduct }) {
+export default function ProductCreate({
+  createForm,
+  setCreateForm,
+  createProductCallback,
+}) {
   const [product, setProduct] = useState({ name: "", price: "" });
-  const handleClose = () => setShow(false);
 
-  function createNewProduct() {
-    createProduct(product);
-    handleClose();
+  function createHandler() {
+    createProductCallback(product);
+    setCreateForm(false);
   }
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={createForm} onHide={() => setCreateForm(false)}>
       <Modal.Header closeButton>
-        <Modal.Title>Add Product</Modal.Title>
+        <Modal.Title>Add new product</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -41,10 +44,10 @@ export default function ProductForm({ show, setShow, createProduct }) {
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={() => setCreateForm(false)}>
           Close
         </Button>
-        <Button variant="primary" onClick={() => createNewProduct()}>
+        <Button variant="primary" onClick={() => createHandler()}>
           Add
         </Button>
       </Modal.Footer>
