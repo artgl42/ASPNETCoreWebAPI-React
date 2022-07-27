@@ -1,6 +1,6 @@
 import React from "react";
 import Products from "../views/Products/Products";
-import Transactions from "../views/Warehouses/Transactions";
+import Transactions from "../views/Transactions/Transactions";
 import Warehouses from "../views/Warehouses/Warehouses";
 import WarehouseProducts from "../views/WarehouseProducts";
 

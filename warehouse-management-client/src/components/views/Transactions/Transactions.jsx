@@ -5,10 +5,14 @@ import { API_URL_GET_ALL_TRANSACTIONS } from "../../constants/API";
 import useFetch from "../../hooks/useFetch";
 import LoadSpinner from "../../UI/LoadSpinner";
 import ErrorAlert from "../../UI/ErrorAlert";
+import TransactionCreate from "./TransactionCreate";
 
 export default function Transactions() {
-  const { data, loading, error } = useFetch(API_URL_GET_ALL_TRANSACTIONS);
+  const { data, loading, error, fetchData } = useFetch(
+    API_URL_GET_ALL_TRANSACTIONS
+  );
   const [transactions, setTransactions] = useState([]);
+  const [visibleCreateForm, setVisibleCreateForm] = useState(false);
 
   useEffect(() => {
     if (!loading) {
@@ -16,10 +20,25 @@ export default function Transactions() {
     }
   }, [loading, data]);
 
+  function createTransactionCallback(transaction) {
+    const options = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(transaction),
+    };
+    fetchData(API_URL_GET_ALL_TRANSACTIONS, options);
+    setTransactions([...transactions, transaction]);
+  }
+
   if (error != null) return <ErrorAlert message={error.message} />;
   if (loading) return <LoadSpinner />;
   return (
     <Stack>
+      <TransactionCreate
+        visible={visibleCreateForm}
+        setVisible={setVisibleCreateForm}
+        createTransactionCallback={createTransactionCallback}
+      />
       <ListGroup as="ol" numbered variant="flush">
         {transactions !== null &&
           transactions.map((transaction) => (
@@ -33,12 +52,6 @@ export default function Transactions() {
               </Stack>
               <Stack>{`${transaction.product.name}`}</Stack>
               <Stack>{`${transaction.count}`}</Stack>
-              <Button size="sm" variant="outline-success" className="mx-1 my-0">
-                Update
-              </Button>
-              <Button size="sm" variant="outline-danger">
-                Delete
-              </Button>
             </ListGroup.Item>
           ))}
       </ListGroup>
@@ -53,7 +66,7 @@ export default function Transactions() {
         <Button
           variant="outline-success"
           size="sm"
-          onClick={() => setTransactions([])}
+          onClick={() => setVisibleCreateForm(true)}
         >
           Add transaction
         </Button>
