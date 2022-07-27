@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 // @ts-ignore
 import { Stack, ListGroup, Button, ButtonGroup } from "react-bootstrap";
-import { API_URL_GET_ALL_TRANSACTIONS } from "../constants/API";
-import useFetch from "../hooks/useFetch";
-import LoadSpinner from "../UI/LoadSpinner";
-import ErrorAlert from "../UI/ErrorAlert";
+import { API_URL_GET_ALL_TRANSACTIONS } from "../../constants/API";
+import useFetch from "../../hooks/useFetch";
+import LoadSpinner from "../../UI/LoadSpinner";
+import ErrorAlert from "../../UI/ErrorAlert";
 
 export default function Transactions() {
   const { data, loading, error } = useFetch(API_URL_GET_ALL_TRANSACTIONS);

@@ -14,11 +14,9 @@ export default function Products() {
     API_URL_GET_ALL_PRODUCTS
   );
   const [products, setProducts] = useState([]);
-  const [createForm, setCreateForm] = useState(false);
-  const [updateForm, setUpdateForm] = useState({
-    visible: false,
-    product: null,
-  });
+  const [visibleCreateForm, setVisibleCreateForm] = useState(false);
+  const [visibleUpdateForm, setVisibleUpdateForm] = useState(false);
+  const [productForUpdate, setProductForUpdate] = useState(null);
 
   useEffect(() => {
     if (!loading) {
@@ -34,6 +32,11 @@ export default function Products() {
     };
     fetchData(API_URL_GET_ALL_PRODUCTS, options);
     setProducts([...products, product]);
+  }
+
+  function updateHandler(product) {
+    setVisibleUpdateForm(true);
+    setProductForUpdate(product);
   }
 
   function updateProductCallback(product) {
@@ -58,13 +61,14 @@ export default function Products() {
   return (
     <Stack>
       <ProductCreate
-        createForm={createForm}
-        setCreateForm={setCreateForm}
+        visible={visibleCreateForm}
+        setVisible={setVisibleCreateForm}
         createProductCallback={createProductCallback}
       />
       <ProductUpdate
-        updateForm={updateForm}
-        setUpdateForm={setUpdateForm}
+        visible={visibleUpdateForm}
+        setVisible={setVisibleUpdateForm}
+        productForUpdate={productForUpdate}
         updateProductCallback={updateProductCallback}
       />
       <ListGroup as="ol" numbered variant="flush">
@@ -77,9 +81,7 @@ export default function Products() {
                 size="sm"
                 variant="outline-success"
                 className="mx-1 my-0"
-                onClick={() =>
-                  setUpdateForm({ visible: true, product: product })
-                }
+                onClick={() => updateHandler(product)}
               >
                 Update
               </Button>
@@ -104,7 +106,7 @@ export default function Products() {
         <Button
           variant="outline-success"
           size="sm"
-          onClick={() => setCreateForm(true)}
+          onClick={() => setVisibleCreateForm(true)}
         >
           Add product
         </Button>

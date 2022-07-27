@@ -1,7 +1,7 @@
 import React from "react";
 import Products from "../views/Products/Products";
-import Transactions from "../views/Transactions";
-import Warehouses from "../views/Warehouses";
+import Transactions from "../views/Warehouses/Transactions";
+import Warehouses from "../views/Warehouses/Warehouses";
 import WarehouseProducts from "../views/WarehouseProducts";
 
 export default function Reducer(_view, action) {
