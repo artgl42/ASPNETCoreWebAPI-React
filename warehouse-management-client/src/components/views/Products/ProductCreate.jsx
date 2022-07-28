@@ -8,11 +8,27 @@ export default function ProductCreate({
   setVisible,
   createProductCallback,
 }) {
-  const [product, setProduct] = useState({ name: "", price: "" });
+  const [product, setProduct] = useState({ name: "", price: 0 });
+  const [errors, setErrors] = useState({});
+
+  function findFormErrors() {
+    const formErrors = {};
+    if (product.name === "")
+      formErrors.productNameEmpty = "Product name can't be empty";
+    if (product.price === "" || product.price <= 0)
+      formErrors.productPriceEmptyOrZero =
+        "Product count can't be empty or zero";
+    return formErrors;
+  }
 
   function createHandler() {
-    createProductCallback(product);
-    setVisible(false);
+    const formErrors = findFormErrors();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+    } else {
+      createProductCallback(product);
+      setVisible(false);
+    }
   }
 
   return (
@@ -26,19 +42,27 @@ export default function ProductCreate({
           <Form.Label>Name</Form.Label>
           <Form.Control
             value={product.name}
+            isInvalid={!!errors.productNameEmpty}
             onChange={(e) => setProduct({ ...product, name: e.target.value })}
             type="text"
             placeholder="Name of product"
           />
+          <Form.Control.Feedback type="invalid">
+            {errors.productNameEmpty}
+          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="mb-3" controlId="ProductPrice">
           <Form.Label>Price</Form.Label>
           <Form.Control
             value={product.price}
+            isInvalid={!!errors.productPriceEmptyOrZero}
             onChange={(e) => setProduct({ ...product, price: e.target.value })}
             type="number"
             placeholder="Price of product"
           />
+          <Form.Control.Feedback type="invalid">
+            {errors.productPriceEmptyOrZero}
+          </Form.Control.Feedback>
         </Form.Group>
         <Button variant="primary" onClick={() => createHandler()}>
           Add

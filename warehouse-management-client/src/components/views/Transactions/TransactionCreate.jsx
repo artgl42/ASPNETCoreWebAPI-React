@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { Button, Form, Dropdown, DropdownButton } from "react-bootstrap";
+import { Button, Form, FloatingLabel, Row, Col } from "react-bootstrap";
 import ModalWindow from "../../UI/ModalWindow";
 import {
   API_URL_GET_ALL_WAREHOUSES,
@@ -12,16 +12,17 @@ export default function TransactionCreate({
   setVisible,
   createTransactionCallback,
 }) {
-  const [error, setError] = useState(null);
-  const [warehouses, setWarehouses] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [transaction, setTransaction] = useState({
-    dateTime: "",
+  const initTransaction = {
+    dateTime: new Date().toISOString().slice(0, 10),
     warehouseIdFrom: "",
     warehouseIdIn: "",
     productId: "",
-    productCount: "",
-  });
+    productCount: 0,
+  };
+  const [warehouses, setWarehouses] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [transaction, setTransaction] = useState(initTransaction);
+  const [errors, setErrors] = useState({});
 
   function fetchData(url, setDate) {
     fetch(url)
@@ -33,7 +34,7 @@ export default function TransactionCreate({
         setDate(result);
       })
       .catch((error) => {
-        setError(error);
+        return error;
       });
   }
 
@@ -42,10 +43,32 @@ export default function TransactionCreate({
     fetchData(API_URL_GET_ALL_PRODUCTS, setProducts);
   }, []);
 
+  function findFormErrors() {
+    const formErrors = {};
+    if (transaction.warehouseIdFrom === "")
+      formErrors.warehouseIdFromEmpty = "WarehouseFrom can't be empty";
+    if (transaction.warehouseIdIn === "")
+      formErrors.warehouseIdInEmpty = "WarehouseIn can't be empty";
+    if (transaction.warehouseIdFrom === transaction.warehouseIdIn)
+      formErrors.warehousesEqual = "Warehouses can't be equal";
+    if (transaction.productId === "")
+      formErrors.productIdEmpty = "Product can't be empty";
+    if (transaction.productCount === "" || transaction.productCount <= 0)
+      formErrors.productCountEmptyOrZero =
+        "Product count can't be empty or zero";
+    return formErrors;
+  }
+
   function createHandler() {
-    console.log(transaction);
+    const formErrors = findFormErrors();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+    } else {
+      console.log(transaction);
+      setVisible(false);
+      setTransaction(initTransaction);
+    }
     //createTransactionCallback(transaction);
-    //setVisible(false);
   }
 
   function handleClickFrom(warehouseId) {
@@ -60,103 +83,120 @@ export default function TransactionCreate({
     setTransaction({ ...transaction, productId: productId });
   }
 
-  if (error === null)
-    return (
-      <ModalWindow
-        title="Create transaction"
-        visible={visible}
-        setVisible={setVisible}
-      >
-        <Form>
-          <Form.Group className="mb-3" controlId="TransactionDate">
-            <Form.Label>Date</Form.Label>
+  return (
+    <ModalWindow
+      title="Create transaction"
+      visible={visible}
+      setVisible={setVisible}
+    >
+      <Form>
+        <Form.Group className="mb-4">
+          <FloatingLabel label="Transaction date" className="mb-3">
             <Form.Control
+              size="sm"
               value={transaction.dateTime}
               onChange={(e) =>
                 setTransaction({ ...transaction, dateTime: e.target.value })
               }
               type="date"
-              placeholder="Date"
+              placeholder="Transaction date"
             />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="TransactionFrom">
-            <Form.Label>From</Form.Label>
-            <DropdownButton
+          </FloatingLabel>
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Row className="g-2">
+            <Col md>
+              <FloatingLabel label="From warehouse" className="mb-3">
+                <Form.Control
+                  as="select"
+                  size="sm"
+                  isInvalid={!!errors.warehouseIdFromEmpty}
+                  onChange={(e) => handleClickFrom(e.target.value)}
+                  required
+                >
+                  <option></option>
+                  {warehouses !== null &&
+                    warehouses.map((warehouse, index) => (
+                      <option key={index} value={warehouse.id}>
+                        {warehouse.name}
+                      </option>
+                    ))}
+                </Form.Control>
+                <Form.Control.Feedback type="invalid">
+                  {errors.warehouseIdFromEmpty}
+                </Form.Control.Feedback>
+              </FloatingLabel>
+            </Col>
+            <Col md>
+              <FloatingLabel label="To warehouse" className="mb-3">
+                <Form.Control
+                  as="select"
+                  size="sm"
+                  isInvalid={
+                    !!errors.warehouseIdInEmpty || !!errors.warehousesEqual
+                  }
+                  onChange={(e) => handleClickIn(e.target.value)}
+                  required
+                >
+                  <option></option>
+                  {warehouses !== null &&
+                    warehouses.map((warehouse, index) => (
+                      <option key={index} value={warehouse.id}>
+                        {warehouse.name}
+                      </option>
+                    ))}
+                </Form.Control>
+                <Form.Control.Feedback type="invalid">
+                  {errors.warehouseIdInEmpty}
+                </Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  {errors.warehousesEqual}
+                </Form.Control.Feedback>
+              </FloatingLabel>
+            </Col>
+          </Row>
+        </Form.Group>
+        <Form.Group className="mb-4">
+          <FloatingLabel label="Product" className="mb-3">
+            <Form.Control
+              as="select"
               size="sm"
-              menuVariant="dark"
-              title={warehouses
-                .filter((w) => w.id === transaction.warehouseIdFrom)
-                .map((w) => w.name)}
+              isInvalid={!!errors.productIdEmpty}
+              onChange={(e) => handleClickProduct(e.target.value)}
             >
-              {warehouses !== null &&
-                warehouses.map((warehouse, index) => (
-                  <Dropdown.Item
-                    key={index}
-                    value={warehouse.id}
-                    onClick={() => handleClickFrom(warehouse.id)}
-                  >
-                    {warehouse.name}
-                  </Dropdown.Item>
-                ))}
-            </DropdownButton>
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="TransactionIn">
-            <Form.Label>In</Form.Label>
-            <DropdownButton
-              size="sm"
-              menuVariant="dark"
-              title={warehouses
-                .filter((w) => w.id === transaction.warehouseIdIn)
-                .map((w) => w.name)}
-            >
-              {warehouses !== null &&
-                warehouses.map((warehouse, index) => (
-                  <Dropdown.Item
-                    key={index}
-                    value={warehouse.id}
-                    onClick={() => handleClickIn(warehouse.id)}
-                  >
-                    {warehouse.name}
-                  </Dropdown.Item>
-                ))}
-            </DropdownButton>
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="ProductName">
-            <Form.Label>Product</Form.Label>
-            <DropdownButton
-              size="sm"
-              menuVariant="dark"
-              title={products
-                .filter((p) => p.id === transaction.productId)
-                .map((p) => p.name)}
-            >
+              <option></option>
               {products !== null &&
                 products.map((product, index) => (
-                  <Dropdown.Item
-                    key={index}
-                    value={product.id}
-                    onClick={() => handleClickProduct(product.id)}
-                  >
+                  <option key={index} value={product.id}>
                     {product.name}
-                  </Dropdown.Item>
+                  </option>
                 ))}
-            </DropdownButton>
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="ProductCount">
-            <Form.Label>Count</Form.Label>
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              {errors.productIdEmpty}
+            </Form.Control.Feedback>
+          </FloatingLabel>
+          <FloatingLabel label="Product count" className="mb-3">
             <Form.Control
+              size="sm"
+              isInvalid={!!errors.productCountEmptyOrZero}
               value={transaction.productCount}
               onChange={(e) =>
-                setTransaction({ ...transaction, productCount: e.target.value })
+                setTransaction({
+                  ...transaction,
+                  productCount: e.target.value,
+                })
               }
               type="number"
               placeholder="Product count"
             />
-          </Form.Group>
-          <Button variant="success" onClick={() => createHandler()}>
-            Add
-          </Button>
-        </Form>
-      </ModalWindow>
-    );
+            <Form.Control.Feedback type="invalid">
+              {errors.productCountEmptyOrZero}
+            </Form.Control.Feedback>
+          </FloatingLabel>
+        </Form.Group>
+        <Button onClick={() => createHandler()}>Create transaction</Button>
+      </Form>
+    </ModalWindow>
+  );
 }
