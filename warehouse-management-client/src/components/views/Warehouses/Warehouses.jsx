@@ -33,7 +33,6 @@ export default function Warehouses() {
       body: JSON.stringify(warehouse),
     };
     fetchData(API_URL_GET_ALL_WAREHOUSES, options);
-    setWarehouses([...warehouses, warehouse]);
   }
 
   function updateHandler(warehouse) {

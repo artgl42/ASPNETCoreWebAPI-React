@@ -36,7 +36,7 @@ namespace WarehouseManagementServer.Controllers
 
             _db.Warehouses.Add(warehouseToCreate);
             await _db.SaveChangesAsync();
-            return Ok(await _db.Warehouses.ToArrayAsync());
+            return await GetWarehousesAsync();
         }
 
         [HttpPut]
@@ -54,7 +54,7 @@ namespace WarehouseManagementServer.Controllers
 
             _db.Warehouses.Update(warehouseToUpdate);
             await _db.SaveChangesAsync();
-            return Ok(await _db.Warehouses.ToArrayAsync());
+            return await GetWarehousesAsync();
         }
 
         [HttpDelete("{warehouseID}")]
@@ -70,7 +70,7 @@ namespace WarehouseManagementServer.Controllers
 
             _db.Warehouses.Remove(_warehouseToDel);
             await _db.SaveChangesAsync();
-            return Ok(await _db.Warehouses.ToArrayAsync());
+            return await GetWarehousesAsync();
         }
     }
 }

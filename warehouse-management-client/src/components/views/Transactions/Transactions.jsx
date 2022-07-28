@@ -27,7 +27,6 @@ export default function Transactions() {
       body: JSON.stringify(transaction),
     };
     fetchData(API_URL_GET_ALL_TRANSACTIONS, options);
-    setTransactions([...transactions, transaction]);
   }
 
   if (error != null) return <ErrorAlert message={error.message} />;

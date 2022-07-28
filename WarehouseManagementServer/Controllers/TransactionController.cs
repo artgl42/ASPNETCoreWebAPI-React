@@ -48,7 +48,7 @@ namespace WarehouseManagementServer.Controllers
 
             _db.Transactions.Add(transactionToCreate);
             await _db.SaveChangesAsync();
-            return Ok(await _db.Transactions.ToArrayAsync());
+            return await GetTransactionsAsync();
         }
 
         [HttpPut]
@@ -66,7 +66,7 @@ namespace WarehouseManagementServer.Controllers
 
             _db.Transactions.Update(transactionToUpdate);
             await _db.SaveChangesAsync();
-            return Ok(await _db.Transactions.ToArrayAsync());
+            return await GetTransactionsAsync();
         }
 
         [HttpDelete("{transactionID}")]
@@ -82,7 +82,7 @@ namespace WarehouseManagementServer.Controllers
 
             _db.Transactions.Remove(_transactionToDel);
             await _db.SaveChangesAsync();
-            return Ok(await _db.Transactions.ToArrayAsync());
+            return await GetTransactionsAsync();
         }
     }
 }

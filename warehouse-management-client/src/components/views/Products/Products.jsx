@@ -31,7 +31,6 @@ export default function Products() {
       body: JSON.stringify(product),
     };
     fetchData(API_URL_GET_ALL_PRODUCTS, options);
-    setProducts([...products, product]);
   }
 
   function updateHandler(product) {

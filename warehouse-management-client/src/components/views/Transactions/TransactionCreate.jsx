@@ -14,10 +14,10 @@ export default function TransactionCreate({
 }) {
   const initTransaction = {
     dateTime: new Date().toISOString().slice(0, 10),
-    warehouseIdFrom: "",
-    warehouseIdIn: "",
-    productId: "",
-    productCount: 0,
+    warehouseFromId: 0,
+    warehouseInId: 0,
+    productId: 0,
+    count: 0,
   };
   const [warehouses, setWarehouses] = useState([]);
   const [products, setProducts] = useState([]);
@@ -45,15 +45,15 @@ export default function TransactionCreate({
 
   function findFormErrors() {
     const formErrors = {};
-    if (transaction.warehouseIdFrom === "")
+    if (transaction.warehouseFromId === 0)
       formErrors.warehouseIdFromEmpty = "WarehouseFrom can't be empty";
-    if (transaction.warehouseIdIn === "")
+    if (transaction.warehouseInId === 0)
       formErrors.warehouseIdInEmpty = "WarehouseIn can't be empty";
-    if (transaction.warehouseIdFrom === transaction.warehouseIdIn)
+    if (transaction.warehouseFromId === transaction.warehouseInId)
       formErrors.warehousesEqual = "Warehouses can't be equal";
-    if (transaction.productId === "")
+    if (transaction.productId === 0)
       formErrors.productIdEmpty = "Product can't be empty";
-    if (transaction.productCount === "" || transaction.productCount <= 0)
+    if (transaction.count <= 0)
       formErrors.productCountEmptyOrZero =
         "Product count can't be empty or zero";
     return formErrors;
@@ -64,19 +64,18 @@ export default function TransactionCreate({
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
     } else {
-      console.log(transaction);
       setVisible(false);
       setTransaction(initTransaction);
+      createTransactionCallback(transaction);
     }
-    //createTransactionCallback(transaction);
   }
 
   function handleClickFrom(warehouseId) {
-    setTransaction({ ...transaction, warehouseIdFrom: warehouseId });
+    setTransaction({ ...transaction, warehouseFromId: warehouseId });
   }
 
   function handleClickIn(warehouseId) {
-    setTransaction({ ...transaction, warehouseIdIn: warehouseId });
+    setTransaction({ ...transaction, warehouseInId: warehouseId });
   }
 
   function handleClickProduct(productId) {
@@ -180,11 +179,10 @@ export default function TransactionCreate({
             <Form.Control
               size="sm"
               isInvalid={!!errors.productCountEmptyOrZero}
-              value={transaction.productCount}
               onChange={(e) =>
                 setTransaction({
                   ...transaction,
-                  productCount: e.target.value,
+                  count: e.target.value,
                 })
               }
               type="number"
