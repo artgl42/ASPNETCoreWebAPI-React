@@ -175,7 +175,7 @@ export default function TransactionCreate({
               {errors.productIdEmpty}
             </Form.Control.Feedback>
           </FloatingLabel>
-          <FloatingLabel label="Product count" className="mb-3">
+          <FloatingLabel label="Count" className="mb-3">
             <Form.Control
               size="sm"
               isInvalid={!!errors.productCountEmptyOrZero}
@@ -193,7 +193,7 @@ export default function TransactionCreate({
             </Form.Control.Feedback>
           </FloatingLabel>
         </Form.Group>
-        <Button onClick={() => createHandler()}>Create transaction</Button>
+        <Button onClick={() => createHandler()}>Create</Button>
       </Form>
     </ModalWindow>
   );

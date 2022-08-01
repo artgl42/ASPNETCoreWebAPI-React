@@ -85,7 +85,7 @@ export default function Transactions() {
           size="sm"
           onClick={() => setVisibleCreateForm(true)}
         >
-          Add transaction
+          Create transaction
         </Button>
         <Button
           variant="outline-danger"
