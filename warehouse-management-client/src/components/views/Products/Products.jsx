@@ -19,10 +19,10 @@ export default function Products() {
   const [productForUpdate, setProductForUpdate] = useState(null);
 
   useEffect(() => {
-    if (!loading) {
+    if (data !== null) {
       setProducts(data);
     }
-  }, [loading, data]);
+  }, [data]);
 
   function createProductCallback(product) {
     const options = {

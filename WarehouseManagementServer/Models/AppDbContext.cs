@@ -28,45 +28,63 @@ namespace WarehouseManagementServer.Models
                         .HasForeignKey(x => x.WarehouseInID)
                         .OnDelete(DeleteBehavior.ClientSetNull);
 
-            const byte WAREHOUSES = 4;
-            const byte PRODUCTS = 5;
-            const byte TRANSACTIONS = 2;
 
-            Warehouse[] _warehouses = new Warehouse[WAREHOUSES];
-            for (int i = 0; i < _warehouses.Length; i++)
+            Warehouse[] _warehouses = new Warehouse[4];
+            _warehouses[0] = new Warehouse
             {
-                _warehouses[i] = new Warehouse { 
-                    ID = i + 1, 
-                    Name = $"Warehouse {i + 1}", 
-                    Address = $"Address {i + 1}" 
+                ID = 1,
+                Name = "Debit of warehouses",
+                Address = "Virtual warehouse"
+            };
+            _warehouses[1] = new Warehouse
+            {
+                ID = 2,
+                Name = "Credit of warehouses",
+                Address = "Virtual warehouse"
+            };
+            for (int i = 2; i < _warehouses.Length; i++)
+            {
+                _warehouses[i] = new Warehouse
+                {
+                    ID = i + 1,
+                    Name = $"Warehouse {i - 1}",
+                    Address = $"Some address for warehouse {i - 1}"
                 };
             }
 
             Random _random = new Random();
-
-            Product[] _products = new Product[PRODUCTS];
+            Product[] _products = new Product[2];
             for (int i = 0; i < _products.Length; i++)
             {
-                _products[i] = new Product { 
-                    ID = i + 1, 
-                    Name = $"Product {i}", 
-                    Price = _random.NextInt64(0, 10000) 
+                _products[i] = new Product
+                {
+                    ID = i + 1,
+                    Name = $"Some product {i + 1}",
+                    Price = _random.NextInt64(0, 10000)
                 };
             }
 
-            Transaction[] _transactions = new Transaction[TRANSACTIONS];
-            for (int i = 0; i < _transactions.Length; i++)
+            Transaction[] _transactions = new Transaction[2];
+
+            _transactions[0] = new Transaction
             {
-                _transactions[i] = new Transaction { 
-                    ID = i + 1,                  
-                    DateTime = DateTime.Parse("2022-05-25"), 
-                    WarehouseFromID = 1,
-                    WarehouseInID = 2,
-                    ProductID = 1,
-                    Count = (int)_random.NextInt64(0, 1000)
-                };
-            }
+                ID = 1,
+                DateTime = DateTime.Parse("2022-05-25"),
+                WarehouseFromID = 3,
+                WarehouseInID = 1,
+                ProductID = 1,
+                Count = -100
+            };
 
+            _transactions[1] = new Transaction
+            {
+                ID = 2,
+                DateTime = DateTime.Parse("2022-05-25"),
+                WarehouseFromID = 1,
+                WarehouseInID = 3,
+                ProductID = 1,
+                Count = 100
+            };
             modelBuilder.Entity<Warehouse>().HasData(_warehouses);
             modelBuilder.Entity<Product>().HasData(_products);
             modelBuilder.Entity<Transaction>().HasData(_transactions);

@@ -15,10 +15,10 @@ export default function Transactions() {
   const [visibleCreateForm, setVisibleCreateForm] = useState(false);
 
   useEffect(() => {
-    if (!loading) {
-      setTransactions(data);
+    if (data !== null) {
+      setTransactions(data.filter((transaction) => transaction.count > 0));
     }
-  }, [loading, data]);
+  }, [data]);
 
   function createTransactionCallback(transaction) {
     const options = {
@@ -43,7 +43,7 @@ export default function Transactions() {
           transactions.map((transaction) => (
             <ListGroup.Item as="li" key={transaction.id} className="d-flex">
               <Stack className="ms-2 me-auto">
-                {`${transaction.dateTime}`}
+                {`${transaction.dateTime.slice(0, 10)}`}
               </Stack>
               <Stack>{`${transaction.warehouseFrom.name}`}</Stack>
               <Stack className="ms-2 me-auto">
@@ -60,7 +60,25 @@ export default function Transactions() {
           size="sm"
           onClick={() => setTransactions(data)}
         >
-          Show transactions
+          Show all transactions
+        </Button>
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={() =>
+            setTransactions(data.filter((transaction) => transaction.count > 0))
+          }
+        >
+          Show debit transactions
+        </Button>
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={() =>
+            setTransactions(data.filter((transaction) => transaction.count < 0))
+          }
+        >
+          Show credit transactions
         </Button>
         <Button
           variant="outline-success"

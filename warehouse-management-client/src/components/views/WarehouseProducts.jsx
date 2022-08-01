@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 // @ts-ignore
-import { Stack, ListGroup, Badge, Breadcrumb } from "react-bootstrap";
+import { Stack, ListGroup, Badge } from "react-bootstrap";
 import { API_URL_GET_ALL_PRODUCTS_ON_DATE } from "../constants/API";
 import useFetch from "../hooks/useFetch";
 import LoadSpinner from "../UI/LoadSpinner";
@@ -22,10 +21,10 @@ export default function WarehouseProducts({ id }) {
   );
 
   useEffect(() => {
-    if (!loading) {
+    if (data !== null) {
       setProducts(data);
     }
-  }, [loading, data]);
+  }, [data]);
 
   function handleChangeDate(e) {
     setDate(e.target.value);
@@ -40,29 +39,21 @@ export default function WarehouseProducts({ id }) {
   if (loading) return <LoadSpinner />;
   return (
     <Stack className="my-2">
-      <Breadcrumb>
-        <Breadcrumb.Item active>
-          <Badge bg="dark">
+      <Stack direction="horizontal" gap={1}>
+        <Badge bg="dark">
+          <h6>
             <input type="date" value={date} onChange={handleChangeDate} />
-          </Badge>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item active>
-          <Badge bg="dark">
-            Warehouse (id):{" "}
-            <Badge pill bg="info">
-              {id}
-            </Badge>
-          </Badge>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item active>
-          <Badge bg="dark">
-            Products (count):{" "}
-            <Badge pill bg="info">
-              {Array.isArray(products) ? products.length : 0}
-            </Badge>
-          </Badge>
-        </Breadcrumb.Item>
-      </Breadcrumb>
+          </h6>
+        </Badge>
+        <Badge bg="dark">
+          <h6>Warehouse (id): {id}</h6>
+        </Badge>
+        <Badge bg="dark">
+          <h6>
+            Products (count): {Array.isArray(products) ? products.length : 0}
+          </h6>
+        </Badge>
+      </Stack>
       <Stack>
         <ListGroup as="ol" numbered variant="flush">
           {Array.isArray(products) &&
@@ -75,7 +66,7 @@ export default function WarehouseProducts({ id }) {
                 <Stack className="ms-2 me-auto">
                   {`${product.product.name}`}
                 </Stack>
-                <Badge bg="primary">{`${product.count}`}</Badge>
+                {`${product.count}`}
               </ListGroup.Item>
             ))}
         </ListGroup>
@@ -83,6 +74,3 @@ export default function WarehouseProducts({ id }) {
     </Stack>
   );
 }
-WarehouseProducts.propTypes = {
-  id: PropTypes.number.isRequired,
-};

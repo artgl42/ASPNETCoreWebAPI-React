@@ -6,6 +6,8 @@ import { API_URL_GET_ALL_WAREHOUSES } from "../../constants/API";
 import useFetch from "../../hooks/useFetch";
 import LoadSpinner from "../../UI/LoadSpinner";
 import WarehouseImage from "../../imgs/warehouse.png";
+import WarehouseDebitImage from "../../imgs/debit_of_warehouses.png";
+import WarehouseCreditImage from "../../imgs/credit_of_warehouses.png";
 import ErrorAlert from "../../UI/ErrorAlert";
 import WarehouseCreate from "./WarehouseCreate";
 import WarehouseUpdate from "./WarehouseUpdate";
@@ -21,10 +23,10 @@ export default function Warehouses() {
   const [warehouseForUpdate, setWarehouseForUpdate] = useState(null);
 
   useEffect(() => {
-    if (!loading) {
+    if (data !== null) {
       setWarehouses(data);
     }
-  }, [loading, data]);
+  }, [data]);
 
   function createWarehouseCallback(warehouse) {
     const options = {
@@ -77,7 +79,16 @@ export default function Warehouses() {
           warehouses.map((warehouse, index) => (
             <Col key={index} className="ms-0 my-1 me-1 p-0">
               <Card>
-                <Card.Img variant="top" src={WarehouseImage} />
+                <Card.Img
+                  variant="top"
+                  src={
+                    index === 0
+                      ? WarehouseDebitImage
+                      : index === 1
+                      ? WarehouseCreditImage
+                      : WarehouseImage
+                  }
+                />
                 <Card.Body>
                   <Card.Title>{warehouse.name}</Card.Title>
                   <Card.Text>{warehouse.address}</Card.Text>

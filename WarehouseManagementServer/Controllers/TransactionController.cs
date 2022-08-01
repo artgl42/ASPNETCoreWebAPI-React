@@ -39,14 +39,24 @@ namespace WarehouseManagementServer.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<Transaction>>> CreateTransactionAsync(Transaction transactionToCreate)
+        public async Task<ActionResult<IEnumerable<Transaction>>> CreateTransactionAsync(Transaction transaction)
         {
-            if (transactionToCreate is null)
+            if (transaction is null)
             {
                 return BadRequest();
             }
 
-            _db.Transactions.Add(transactionToCreate);
+            var _transactionCredit = new Transaction
+            {
+                WarehouseFromID = transaction.WarehouseInID,
+                WarehouseInID = transaction.WarehouseFromID,
+                ProductID = transaction.ProductID,
+                Count = -Convert.ToInt32(transaction.Count),
+                DateTime = transaction.DateTime
+            };
+
+            _db.Transactions.Add(_transactionCredit);
+            _db.Transactions.Add(transaction);
             await _db.SaveChangesAsync();
             return await GetTransactionsAsync();
         }
