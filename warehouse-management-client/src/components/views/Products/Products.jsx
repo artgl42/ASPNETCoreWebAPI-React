@@ -114,7 +114,7 @@ export default function Products() {
       <ListGroup as="ol" numbered variant="flush">
         {sortedAndSearchedProducts !== null &&
         sortedAndSearchedProducts.length === 0 ? (
-          <Stack className="m-auto">
+          <Stack className="m-auto mt-2">
             <Alert variant="info">
               <Alert.Heading>Products not found.</Alert.Heading>
             </Alert>
