@@ -42,13 +42,11 @@ export default function Transactions() {
         {transactions !== null &&
           transactions.map((transaction) => (
             <ListGroup.Item as="li" key={transaction.id} className="d-flex">
-              <Stack className="ms-2 me-auto">
+              <Stack className="ms-2">
                 {`${transaction.dateTime.slice(0, 10)}`}
               </Stack>
               <Stack>{`${transaction.warehouseFrom.name}`}</Stack>
-              <Stack className="ms-2 me-auto">
-                {`${transaction.warehouseIn.name}`}
-              </Stack>
+              <Stack>{`${transaction.warehouseIn.name}`}</Stack>
               <Stack>{`${transaction.product.name}`}</Stack>
               <Stack>{`${transaction.count}`}</Stack>
             </ListGroup.Item>

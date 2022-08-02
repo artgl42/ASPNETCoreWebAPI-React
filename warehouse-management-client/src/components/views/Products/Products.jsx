@@ -1,13 +1,14 @@
 // @ts-nocheck
 /* eslint-disable react/jsx-no-bind */
-import React, { useState, useEffect } from "react";
-import { Stack, ListGroup, Button, ButtonGroup } from "react-bootstrap";
+import React, { useState, useEffect, useMemo } from "react";
+import { Stack, ListGroup, Button, ButtonGroup, Alert } from "react-bootstrap";
 import { API_URL_GET_ALL_PRODUCTS } from "../../constants/API";
 import useFetch from "../../hooks/useFetch";
 import LoadSpinner from "../../UI/LoadSpinner";
 import ErrorAlert from "../../UI/ErrorAlert";
 import ProductCreate from "./ProductCreate";
 import ProductUpdate from "./ProductUpdate";
+import ProductsFilter from "../../UI/Filter";
 
 export default function Products() {
   const { data, loading, error, fetchData } = useFetch(
@@ -17,6 +18,10 @@ export default function Products() {
   const [visibleCreateForm, setVisibleCreateForm] = useState(false);
   const [visibleUpdateForm, setVisibleUpdateForm] = useState(false);
   const [productForUpdate, setProductForUpdate] = useState(null);
+  const [filterOpt, setFilterOpt] = useState({
+    selectedSort: "",
+    searchQuery: "",
+  });
 
   useEffect(() => {
     if (data !== null) {
@@ -55,6 +60,33 @@ export default function Products() {
     fetchData(api, options);
   }
 
+  const sortedProducts = useMemo(() => {
+    if (filterOpt.selectedSort !== "") {
+      switch (filterOpt.selectedSort) {
+        case "Name":
+          return [...products].sort((a, b) => a.name.localeCompare(b.name));
+        case "Price (ascending)":
+          return [...products].sort(function (a, b) {
+            return a.price - b.price;
+          });
+
+        case "Price (descending)":
+          return [...products].sort(function (a, b) {
+            return b.price - a.price;
+          });
+        default:
+          break;
+      }
+    }
+    return products;
+  }, [products, filterOpt.selectedSort]);
+
+  const sortedAndSearchedProducts = useMemo(() => {
+    return sortedProducts.filter((product) =>
+      product.name.toLowerCase().includes(filterOpt.searchQuery.toLowerCase())
+    );
+  }, [sortedProducts, filterOpt.searchQuery]);
+
   if (error != null) return <ErrorAlert message={error.message} />;
   if (loading) return <LoadSpinner />;
   return (
@@ -70,12 +102,28 @@ export default function Products() {
         productForUpdate={productForUpdate}
         updateProductCallback={updateProductCallback}
       />
+      <ProductsFilter
+        selectOpt={[
+          { value: "Name" },
+          { value: "Price (ascending)" },
+          { value: "Price (descending)" },
+        ]}
+        filterOpt={filterOpt}
+        setFilterOpt={setFilterOpt}
+      />
       <ListGroup as="ol" numbered variant="flush">
-        {products !== null &&
-          products.map((product, index) => (
+        {sortedAndSearchedProducts !== null &&
+        sortedAndSearchedProducts.length === 0 ? (
+          <Stack className="m-auto">
+            <Alert variant="info">
+              <Alert.Heading>Products not found.</Alert.Heading>
+            </Alert>
+          </Stack>
+        ) : (
+          sortedAndSearchedProducts.map((product, index) => (
             <ListGroup.Item as="li" key={index} className="d-flex">
-              <Stack className="ms-2 me-auto">{`${product.name}`}</Stack>
-              <Stack>{`${product.price}`}</Stack>
+              <Stack className="w-100 ms-2">{`${product.name}`}</Stack>
+              <Stack className="w-100">{`${product.price}`}</Stack>
               <Button
                 size="sm"
                 variant="outline-success"
@@ -92,7 +140,8 @@ export default function Products() {
                 Delete
               </Button>
             </ListGroup.Item>
-          ))}
+          ))
+        )}
       </ListGroup>
       <ButtonGroup vertical>
         <Button
