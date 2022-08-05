@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 // @ts-ignore
 import { Stack, ListGroup, Badge } from "react-bootstrap";
-import { API_URL_GET_ALL_PRODUCTS_ON_DATE } from "../constants/API";
+import { API_URL_REPORTS } from "../constants/API";
 import useFetch from "../hooks/useFetch";
 import LoadSpinner from "../UI/LoadSpinner";
 import ErrorAlert from "../UI/ErrorAlert";
@@ -17,7 +17,7 @@ export default function WarehouseProducts({ id }) {
   }
 
   const { data, loading, error, fetchData } = useFetch(
-    `${API_URL_GET_ALL_PRODUCTS_ON_DATE}/${getFormatedDate(date)}/${id}`
+    `${API_URL_REPORTS}/${getFormatedDate(date)}/${id}`
   );
 
   useEffect(() => {
@@ -28,11 +28,7 @@ export default function WarehouseProducts({ id }) {
 
   function handleChangeDate(e) {
     setDate(e.target.value);
-    fetchData(
-      `${API_URL_GET_ALL_PRODUCTS_ON_DATE}/${getFormatedDate(
-        e.target.value
-      )}/${id}`
-    );
+    fetchData(`${API_URL_REPORTS}/${getFormatedDate(e.target.value)}/${id}`);
   }
 
   if (error != null) return <ErrorAlert message={error.message} />;

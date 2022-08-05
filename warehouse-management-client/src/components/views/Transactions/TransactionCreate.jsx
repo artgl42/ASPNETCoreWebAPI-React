@@ -2,10 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, FloatingLabel, Row, Col } from "react-bootstrap";
 import ModalWindow from "../../UI/ModalWindow";
-import {
-  API_URL_GET_ALL_WAREHOUSES,
-  API_URL_GET_ALL_PRODUCTS,
-} from "../../constants/API";
+import { API_URL_WAREHOUSES, API_URL_PRODUCTS } from "../../constants/API";
 
 export default function TransactionCreate({
   visible,
@@ -39,8 +36,8 @@ export default function TransactionCreate({
   }
 
   useEffect(() => {
-    fetchData(API_URL_GET_ALL_WAREHOUSES, setWarehouses);
-    fetchData(API_URL_GET_ALL_PRODUCTS, setProducts);
+    fetchData(API_URL_WAREHOUSES, setWarehouses);
+    fetchData(API_URL_PRODUCTS, setProducts);
   }, []);
 
   function findFormErrors() {

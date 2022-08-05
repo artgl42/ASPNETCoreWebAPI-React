@@ -8,8 +8,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CORSPolicy", builder =>
     {
         builder
+        .AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader()
+        .WithExposedHeaders("X-Pagination")
         .WithOrigins("http://localhost:3000");
     });
 });

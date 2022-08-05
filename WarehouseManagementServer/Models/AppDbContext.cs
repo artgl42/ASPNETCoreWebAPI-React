@@ -53,13 +53,14 @@ namespace WarehouseManagementServer.Models
             }
 
             Random _random = new Random();
-            Product[] _products = new Product[2];
+            string _chars = "ABCDEFGIKLMNOPQRSTYUXW";
+            Product[] _products = new Product[25];
             for (int i = 0; i < _products.Length; i++)
             {
                 _products[i] = new Product
                 {
                     ID = i + 1,
-                    Name = $"Some product {i + 1}",
+                    Name = $"{_chars[_random.Next(_chars.Length)]}Product{i + 1}",
                     Price = _random.NextInt64(0, 10000)
                 };
             }

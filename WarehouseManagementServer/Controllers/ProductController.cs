@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WarehouseManagementServer.DTOs;
 using WarehouseManagementServer.Models;
 
 namespace WarehouseManagementServer.Controllers
@@ -12,9 +14,16 @@ namespace WarehouseManagementServer.Controllers
         public ProductController(AppDbContext dbContext) => _db = dbContext;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProductsAsync()
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductsAsync([FromQuery] PaginationParams @params)
         {
-            return Ok(await _db.Products.ToArrayAsync());
+            var _productsAll = _db.Products;
+            var _paginationMetadata = new PaginationMetadata(@params.Page, _productsAll.Count(), @params.ItemsPerPage);
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(_paginationMetadata));
+            var _productsSelected = await _productsAll
+                .Skip((@params.Page - 1) * @params.ItemsPerPage)
+                .Take(@params.ItemsPerPage)
+                .ToListAsync();
+            return Ok(_productsSelected);
         }
 
         [HttpGet("{productID}")]
@@ -27,7 +36,7 @@ namespace WarehouseManagementServer.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<Product>>> CreateProductAsync(Product productToCreate)
+        public async Task<ActionResult<Product>> CreateProductAsync(Product productToCreate)
         {
             if (productToCreate is null)
             {
@@ -36,7 +45,7 @@ namespace WarehouseManagementServer.Controllers
 
             _db.Products.Add(productToCreate);
             await _db.SaveChangesAsync();
-            return await GetProductsAsync();
+            return CreatedAtAction("GetProduct", new { productID = productToCreate.ID }, productToCreate);
         }
 
         [HttpPut]
@@ -54,7 +63,7 @@ namespace WarehouseManagementServer.Controllers
 
             _db.Products.Update(productToUpdate);
             await _db.SaveChangesAsync();
-            return await GetProductsAsync();
+            return CreatedAtAction("GetProduct", new { productID = productToUpdate.ID }, productToUpdate);
         }
 
         [HttpDelete("{productID}")]
@@ -70,7 +79,7 @@ namespace WarehouseManagementServer.Controllers
 
             _db.Products.Remove(_productToDel);
             await _db.SaveChangesAsync();
-            return await GetProductsAsync();
+            return Ok(await _db.Products.ToListAsync());
         }
     }
 }

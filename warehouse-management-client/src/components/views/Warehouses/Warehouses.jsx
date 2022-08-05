@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 // @ts-ignore
 import { Stack, Row, Col, Card, Button, ButtonGroup } from "react-bootstrap";
 import { useReducerContext } from "../../hooks/useReducerContext";
-import { API_URL_GET_ALL_WAREHOUSES } from "../../constants/API";
+import { API_URL_WAREHOUSES } from "../../constants/API";
 import useFetch from "../../hooks/useFetch";
 import LoadSpinner from "../../UI/LoadSpinner";
 import WarehouseImage from "../../imgs/warehouse.png";
@@ -13,9 +13,7 @@ import WarehouseCreate from "./WarehouseCreate";
 import WarehouseUpdate from "./WarehouseUpdate";
 
 export default function Warehouses() {
-  const { data, loading, error, fetchData } = useFetch(
-    API_URL_GET_ALL_WAREHOUSES
-  );
+  const { data, loading, error, fetchData } = useFetch(API_URL_WAREHOUSES);
   const [warehouses, setWarehouses] = useState([]);
   const { dispatch } = useReducerContext();
   const [visibleCreateForm, setVisibleCreateForm] = useState(false);
@@ -34,7 +32,7 @@ export default function Warehouses() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(warehouse),
     };
-    fetchData(API_URL_GET_ALL_WAREHOUSES, options);
+    fetchData(API_URL_WAREHOUSES, options);
   }
 
   function updateHandler(warehouse) {
@@ -48,14 +46,14 @@ export default function Warehouses() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(warehouse),
     };
-    fetchData(API_URL_GET_ALL_WAREHOUSES, options);
+    fetchData(API_URL_WAREHOUSES, options);
   }
 
   function deleteWarehouseCallback(warehouseId) {
     const options = {
       method: "DELETE",
     };
-    const api = `${API_URL_GET_ALL_WAREHOUSES}/${warehouseId}`;
+    const api = `${API_URL_WAREHOUSES}/${warehouseId}`;
     fetchData(api, options);
   }
 

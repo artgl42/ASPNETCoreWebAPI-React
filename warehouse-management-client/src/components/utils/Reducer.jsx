@@ -12,7 +12,7 @@ export default function Reducer(_view, action) {
       };
     case "ProductsTable":
       return {
-        dataView: <Products />,
+        dataView: <Products productsPerPage={10} startPage={1} />,
       };
     case "WarehouseCards":
       return {

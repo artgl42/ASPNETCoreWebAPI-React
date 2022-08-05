@@ -1,8 +1,15 @@
 // @ts-nocheck
 /* eslint-disable react/jsx-no-bind */
 import React, { useState, useEffect, useMemo } from "react";
-import { Stack, ListGroup, Button, ButtonGroup, Alert } from "react-bootstrap";
-import { API_URL_GET_ALL_PRODUCTS } from "../../constants/API";
+import {
+  Stack,
+  ListGroup,
+  Button,
+  ButtonGroup,
+  Alert,
+  Pagination,
+} from "react-bootstrap";
+import { API_URL_PRODUCTS } from "../../constants/API";
 import useFetch from "../../hooks/useFetch";
 import LoadSpinner from "../../UI/LoadSpinner";
 import ErrorAlert from "../../UI/ErrorAlert";
@@ -10,10 +17,8 @@ import ProductCreate from "./ProductCreate";
 import ProductUpdate from "./ProductUpdate";
 import ProductsFilter from "../../UI/Filter";
 
-export default function Products() {
-  const { data, loading, error, fetchData } = useFetch(
-    API_URL_GET_ALL_PRODUCTS
-  );
+export default function Products({ productsPerPage, startPage }) {
+  const { pagination, data, loading, error, fetchData } = useFetch();
   const [products, setProducts] = useState([]);
   const [visibleCreateForm, setVisibleCreateForm] = useState(false);
   const [visibleUpdateForm, setVisibleUpdateForm] = useState(false);
@@ -22,12 +27,29 @@ export default function Products() {
     selectedSort: "",
     searchQuery: "",
   });
+  const [totalPages, setTotalPages] = useState();
+  const [limitPerPage] = useState(productsPerPage);
+  const [currentPage, setCurrPage] = useState(startPage);
 
   useEffect(() => {
     if (data !== null) {
       setProducts(data);
-    }
+      const paginationOpt = JSON.parse(pagination);
+      if (paginationOpt !== null) {
+        setTotalPages(paginationOpt.TotalPages);
+        setCurrPage(paginationOpt.CurrentPage);
+      }
+    } else getProducts(currentPage, limitPerPage);
   }, [data]);
+
+  const getPagesArray = useMemo(() => {
+    let result = Array.from({ length: totalPages }, (_, i) => i + 1);
+    return result;
+  }, [totalPages]);
+
+  function getProducts(page, itemPerPage) {
+    fetchData(`${API_URL_PRODUCTS}?Page=${page}&ItemsPerPage=${itemPerPage}`);
+  }
 
   function createProductCallback(product) {
     const options = {
@@ -35,7 +57,7 @@ export default function Products() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(product),
     };
-    fetchData(API_URL_GET_ALL_PRODUCTS, options);
+    fetchData(API_URL_PRODUCTS, options);
   }
 
   function updateHandler(product) {
@@ -49,14 +71,14 @@ export default function Products() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(product),
     };
-    fetchData(API_URL_GET_ALL_PRODUCTS, options);
+    fetchData(API_URL_PRODUCTS, options);
   }
 
   function deleteProductCallback(productId) {
     const options = {
       method: "DELETE",
     };
-    const api = `${API_URL_GET_ALL_PRODUCTS}/${productId}`;
+    const api = `${API_URL_PRODUCTS}/${productId}`;
     fetchData(api, options);
   }
 
@@ -82,9 +104,12 @@ export default function Products() {
   }, [products, filterOpt.selectedSort]);
 
   const sortedAndSearchedProducts = useMemo(() => {
-    return sortedProducts.filter((product) =>
-      product.name.toLowerCase().includes(filterOpt.searchQuery.toLowerCase())
-    );
+    if (Array.isArray(sortedProducts)) {
+      return sortedProducts.filter((product) =>
+        product.name.toLowerCase().includes(filterOpt.searchQuery.toLowerCase())
+      );
+    }
+    return sortedProducts;
   }, [sortedProducts, filterOpt.searchQuery]);
 
   if (error != null) return <ErrorAlert message={error.message} />;
@@ -111,17 +136,17 @@ export default function Products() {
         filterOpt={filterOpt}
         setFilterOpt={setFilterOpt}
       />
-      <ListGroup as="ol" numbered variant="flush">
+      <ListGroup as="ol" variant="flush">
         {sortedAndSearchedProducts !== null &&
+        Array.isArray(sortedAndSearchedProducts) &&
         sortedAndSearchedProducts.length === 0 ? (
           <Stack className="m-auto mt-2">
-            <Alert variant="info">
-              <Alert.Heading>Products not found.</Alert.Heading>
-            </Alert>
+            <h5>The products table is empty.</h5>
           </Stack>
-        ) : (
-          sortedAndSearchedProducts.map((product, index) => (
-            <ListGroup.Item as="li" key={index} className="d-flex">
+        ) : Array.isArray(sortedAndSearchedProducts) ? (
+          sortedAndSearchedProducts.map((product) => (
+            <ListGroup.Item as="li" key={product.id} className="d-flex">
+              <Stack className="ms-2">{`${product.id}`}</Stack>
               <Stack className="w-100 ms-2">{`${product.name}`}</Stack>
               <Stack className="w-100">{`${product.price}`}</Stack>
               <Button
@@ -141,13 +166,65 @@ export default function Products() {
               </Button>
             </ListGroup.Item>
           ))
+        ) : (
+          <Alert variant="success" className="mt-2">
+            <Alert.Heading>Product has been added or updated.</Alert.Heading>
+            <p>
+              Product <b>{sortedAndSearchedProducts.name}</b> with price{" "}
+              <b>{sortedAndSearchedProducts.price}</b> has been added or
+              updated.
+            </p>
+            <div className="d-flex justify-content-end">
+              <Button
+                onClick={() => getProducts(currentPage, limitPerPage)}
+                variant="outline-success"
+              >
+                Ok
+              </Button>
+            </div>
+          </Alert>
         )}
       </ListGroup>
+      <Pagination>
+        <Pagination.First onClick={() => getProducts(1, limitPerPage)} />
+        <Pagination.Prev
+          onClick={() =>
+            getProducts(currentPage > 1 ? currentPage - 1 : 1, limitPerPage)
+          }
+        />
+        {getPagesArray !== null &&
+          getPagesArray.map((page) =>
+            page === currentPage ? (
+              <Pagination.Item key={page} active>
+                {page}
+              </Pagination.Item>
+            ) : (
+              <Pagination.Item
+                key={page}
+                onClick={() => getProducts(page, limitPerPage)}
+              >
+                {page}
+              </Pagination.Item>
+            )
+          )}
+
+        <Pagination.Next
+          onClick={() =>
+            getProducts(
+              currentPage < totalPages ? currentPage + 1 : currentPage,
+              limitPerPage
+            )
+          }
+        />
+        <Pagination.Last
+          onClick={() => getProducts(totalPages, limitPerPage)}
+        />
+      </Pagination>
       <ButtonGroup vertical>
         <Button
           variant="outline-primary"
           size="sm"
-          onClick={() => setProducts(data)}
+          onClick={() => getProducts(1, limitPerPage)}
         >
           Show products
         </Button>

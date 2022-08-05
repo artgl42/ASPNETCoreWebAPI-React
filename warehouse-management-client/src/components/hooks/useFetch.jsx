@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 const useFetch = (url, options) => {
   const [status, setStatus] = useState({
     loading: false,
+    pagination: null,
     data: null,
     error: null,
   });
@@ -12,10 +13,19 @@ const useFetch = (url, options) => {
     fetch(url, options)
       .then((response) => {
         if (!response.ok) throw new Error(response.statusText);
-        else return response.json();
+        else
+          return response.json().then((result) => ({
+            header: response.headers.get("X-Pagination"),
+            result,
+          }));
       })
-      .then((result) => {
-        setStatus({ ...status, loading: false, data: result });
+      .then(({ header, result }) => {
+        setStatus({
+          ...status,
+          pagination: header,
+          loading: false,
+          data: result,
+        });
       })
       .catch((error) => {
         setStatus({ ...status, loading: false, error });

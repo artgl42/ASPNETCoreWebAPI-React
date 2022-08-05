@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 // @ts-ignore
-import { Stack, ListGroup, Button, ButtonGroup, Alert } from "react-bootstrap";
-import { API_URL_GET_ALL_TRANSACTIONS } from "../../constants/API";
+import { Stack, ListGroup, Button, ButtonGroup } from "react-bootstrap";
+import { API_URL_TRANSACTIONS } from "../../constants/API";
 import useFetch from "../../hooks/useFetch";
 import LoadSpinner from "../../UI/LoadSpinner";
 import ErrorAlert from "../../UI/ErrorAlert";
@@ -9,9 +9,7 @@ import TransactionCreate from "./TransactionCreate";
 import TransactionsFilter from "../../UI/Filter";
 
 export default function Transactions() {
-  const { data, loading, error, fetchData } = useFetch(
-    API_URL_GET_ALL_TRANSACTIONS
-  );
+  const { data, loading, error, fetchData } = useFetch(API_URL_TRANSACTIONS);
   const [transactions, setTransactions] = useState([]);
   const [visibleCreateForm, setVisibleCreateForm] = useState(false);
   const [filterOpt, setFilterOpt] = useState({
@@ -31,7 +29,7 @@ export default function Transactions() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(transaction),
     };
-    fetchData(API_URL_GET_ALL_TRANSACTIONS, options);
+    fetchData(API_URL_TRANSACTIONS, options);
   }
 
   const sortedTransactions = useMemo(() => {
@@ -103,9 +101,7 @@ export default function Transactions() {
         {sortedAndSearchedTransactions !== null &&
         sortedAndSearchedTransactions.length === 0 ? (
           <Stack className="m-auto mt-2">
-            <Alert variant="info">
-              <Alert.Heading>Products not found.</Alert.Heading>
-            </Alert>
+            <h5>The transactions table is empty.</h5>
           </Stack>
         ) : (
           sortedAndSearchedTransactions.map((transaction) => (
