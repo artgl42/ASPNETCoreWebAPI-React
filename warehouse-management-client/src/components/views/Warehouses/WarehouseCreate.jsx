@@ -31,7 +31,7 @@ export default function WarehouseCreate({
 
   return (
     <ModalWindow
-      title="Create warehouse"
+      title="Add warehouse"
       visible={visible}
       setVisible={setVisible}
     >

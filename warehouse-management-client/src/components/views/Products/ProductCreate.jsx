@@ -32,11 +32,7 @@ export default function ProductCreate({
   }
 
   return (
-    <ModalWindow
-      title="Create warehouse"
-      visible={visible}
-      setVisible={setVisible}
-    >
+    <ModalWindow title="Add product" visible={visible} setVisible={setVisible}>
       <Form>
         <Form.Group className="mb-3" controlId="ProductName">
           <Form.Label>Name</Form.Label>

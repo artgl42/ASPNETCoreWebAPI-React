@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WarehouseManagementServer.DTOs;
 using WarehouseManagementServer.Models;
 
 namespace WarehouseManagementServer.Controllers
@@ -12,9 +14,9 @@ namespace WarehouseManagementServer.Controllers
         public TransactionController(AppDbContext dbContext) => _db = dbContext;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactionsAsync()
+        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactionsAsync([FromQuery] PaginationParams @params)
         {
-            var _transactions = await _db.Transactions
+            var _transactionsAll = _db.Transactions
                 .Select(transaction => new
                 {
                     transaction.ID,
@@ -23,10 +25,16 @@ namespace WarehouseManagementServer.Controllers
                     transaction.WarehouseIn,
                     transaction.Product,
                     transaction.Count
-                })
+                });
+                
+            var _paginationMetadata = new PaginationMetadata(@params.Page, _transactionsAll.Count(), @params.ItemsPerPage);
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(_paginationMetadata));
+            var _transactionsSelected = await _transactionsAll
+                .Skip((@params.Page - 1) * @params.ItemsPerPage)
+                .Take(@params.ItemsPerPage)
                 .ToListAsync();
 
-            return Ok(_transactions);
+            return Ok(_transactionsSelected);
         }
 
         [HttpGet("{transactionID}")]
@@ -58,25 +66,25 @@ namespace WarehouseManagementServer.Controllers
             _db.Transactions.Add(_transactionCredit);
             _db.Transactions.Add(transaction);
             await _db.SaveChangesAsync();
-            return await GetTransactionsAsync();
+            return CreatedAtAction("GetTransaction", new { transactionID = transaction.ID }, transaction);
         }
 
         [HttpPut]
-        public async Task<ActionResult<IEnumerable<Transaction>>> UpdateTransactionAsync(Transaction transactionToUpdate)
+        public async Task<ActionResult<IEnumerable<Transaction>>> UpdateTransactionAsync(Transaction transaction)
         {
-            if (transactionToUpdate is null)
+            if (transaction is null)
             {
                 return BadRequest();
             }
 
-            if (!_db.Transactions.Any(transaction => transaction.ID == transactionToUpdate.ID))
+            if (!_db.Transactions.Any(transaction => transaction.ID == transaction.ID))
             {
                 return NotFound();
             }
 
-            _db.Transactions.Update(transactionToUpdate);
+            _db.Transactions.Update(transaction);
             await _db.SaveChangesAsync();
-            return await GetTransactionsAsync();
+            return CreatedAtAction("GetTransaction", new { transactionID = transaction.ID }, transaction);
         }
 
         [HttpDelete("{transactionID}")]
@@ -92,7 +100,7 @@ namespace WarehouseManagementServer.Controllers
 
             _db.Transactions.Remove(_transactionToDel);
             await _db.SaveChangesAsync();
-            return await GetTransactionsAsync();
+            return Ok(_transactionToDel);
         }
     }
 }

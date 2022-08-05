@@ -20,7 +20,7 @@ export default function Reducer(_view, action) {
       };
     case "TransactionsTable":
       return {
-        dataView: <Transactions />,
+        dataView: <Transactions startPage={1} transactionsPerPage={10} />,
       };
     case "BalanceProducts":
       return {

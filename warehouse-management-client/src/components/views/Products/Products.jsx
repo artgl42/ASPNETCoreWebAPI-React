@@ -181,7 +181,7 @@ export default function Products({ startPage, productsPerPage }) {
           size="sm"
           onClick={() => getProducts(1, productsPerPage)}
         >
-          Show products
+          Get products
         </Button>
         <Button
           variant="outline-success"

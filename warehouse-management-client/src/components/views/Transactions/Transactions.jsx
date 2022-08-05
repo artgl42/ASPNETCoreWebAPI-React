@@ -7,9 +7,10 @@ import LoadSpinner from "../../UI/LoadSpinner";
 import ErrorAlert from "../../UI/ErrorAlert";
 import TransactionCreate from "./TransactionCreate";
 import TransactionsFilter from "../../UI/Filter";
+import PaginationUI from "../../UI/PaginationUI";
 
-export default function Transactions() {
-  const { data, loading, error, fetchData } = useFetch(API_URL_TRANSACTIONS);
+export default function Transactions({ startPage, transactionsPerPage }) {
+  const { pagination, data, loading, error, fetchData } = useFetch();
   const [transactions, setTransactions] = useState([]);
   const [visibleCreateForm, setVisibleCreateForm] = useState(false);
   const [filterOpt, setFilterOpt] = useState({
@@ -19,9 +20,15 @@ export default function Transactions() {
 
   useEffect(() => {
     if (data !== null) {
-      setTransactions(data.filter((transaction) => transaction.count > 0));
-    }
+      setTransactions(data);
+    } else getTransactions(startPage, transactionsPerPage);
   }, [data]);
+
+  function getTransactions(page, itemPerPage) {
+    fetchData(
+      `${API_URL_TRANSACTIONS}?Page=${page}&ItemsPerPage=${itemPerPage}`
+    );
+  }
 
   function createTransactionCallback(transaction) {
     const options = {
@@ -109,14 +116,28 @@ export default function Transactions() {
               <Stack className="w-100 ms-2">
                 {`${transaction.dateTime.slice(0, 10)}`}
               </Stack>
-              <Stack className="w-100">{`${transaction.warehouseFrom.name}`}</Stack>
-              <Stack className="w-100">{`${transaction.warehouseIn.name}`}</Stack>
+              <Stack className="w-100">
+                {transaction.count >= 0
+                  ? `${transaction.warehouseFrom.name}`
+                  : `${transaction.warehouseIn.name}`}
+              </Stack>
+              <Stack className="w-100">
+                {transaction.count < 0
+                  ? `${transaction.warehouseFrom.name}`
+                  : `${transaction.warehouseIn.name}`}
+              </Stack>
               <Stack className="w-100">{`${transaction.product.name}`}</Stack>
               <Stack className="w-100">{`${transaction.count}`}</Stack>
             </ListGroup.Item>
           ))
         )}
       </ListGroup>
+      <PaginationUI
+        startPage={startPage}
+        itemsPerPage={transactionsPerPage}
+        pagination={pagination}
+        getItems={getTransactions}
+      />
       <ButtonGroup vertical>
         <Button
           variant="outline-primary"
