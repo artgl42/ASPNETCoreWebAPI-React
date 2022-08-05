@@ -79,7 +79,7 @@ namespace WarehouseManagementServer.Controllers
 
             _db.Products.Remove(_productToDel);
             await _db.SaveChangesAsync();
-            return Ok(await _db.Products.ToListAsync());
+            return Ok(_productToDel);
         }
     }
 }

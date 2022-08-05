@@ -1,14 +1,7 @@
 // @ts-nocheck
 /* eslint-disable react/jsx-no-bind */
 import React, { useState, useEffect, useMemo } from "react";
-import {
-  Stack,
-  ListGroup,
-  Button,
-  ButtonGroup,
-  Alert,
-  Pagination,
-} from "react-bootstrap";
+import { Stack, ListGroup, Button, ButtonGroup, Alert } from "react-bootstrap";
 import { API_URL_PRODUCTS } from "../../constants/API";
 import useFetch from "../../hooks/useFetch";
 import LoadSpinner from "../../UI/LoadSpinner";
@@ -16,8 +9,9 @@ import ErrorAlert from "../../UI/ErrorAlert";
 import ProductCreate from "./ProductCreate";
 import ProductUpdate from "./ProductUpdate";
 import ProductsFilter from "../../UI/Filter";
+import PaginationUI from "../../UI/PaginationUI";
 
-export default function Products({ productsPerPage, startPage }) {
+export default function Products({ startPage, productsPerPage }) {
   const { pagination, data, loading, error, fetchData } = useFetch();
   const [products, setProducts] = useState([]);
   const [visibleCreateForm, setVisibleCreateForm] = useState(false);
@@ -27,25 +21,12 @@ export default function Products({ productsPerPage, startPage }) {
     selectedSort: "",
     searchQuery: "",
   });
-  const [totalPages, setTotalPages] = useState();
-  const [limitPerPage] = useState(productsPerPage);
-  const [currentPage, setCurrPage] = useState(startPage);
 
   useEffect(() => {
     if (data !== null) {
       setProducts(data);
-      const paginationOpt = JSON.parse(pagination);
-      if (paginationOpt !== null) {
-        setTotalPages(paginationOpt.TotalPages);
-        setCurrPage(paginationOpt.CurrentPage);
-      }
-    } else getProducts(currentPage, limitPerPage);
+    } else getProducts(startPage, productsPerPage);
   }, [data]);
-
-  const getPagesArray = useMemo(() => {
-    let result = Array.from({ length: totalPages }, (_, i) => i + 1);
-    return result;
-  }, [totalPages]);
 
   function getProducts(page, itemPerPage) {
     fetchData(`${API_URL_PRODUCTS}?Page=${page}&ItemsPerPage=${itemPerPage}`);
@@ -80,6 +61,7 @@ export default function Products({ productsPerPage, startPage }) {
     };
     const api = `${API_URL_PRODUCTS}/${productId}`;
     fetchData(api, options);
+    getProducts(startPage, productsPerPage);
   }
 
   const sortedProducts = useMemo(() => {
@@ -167,16 +149,18 @@ export default function Products({ productsPerPage, startPage }) {
             </ListGroup.Item>
           ))
         ) : (
-          <Alert variant="success" className="mt-2">
-            <Alert.Heading>Product has been added or updated.</Alert.Heading>
+          <Alert variant="success" className="m-auto mt-2">
+            <Alert.Heading>Completed successfully</Alert.Heading>
+            <hr />
             <p>
-              Product <b>{sortedAndSearchedProducts.name}</b> with price{" "}
-              <b>{sortedAndSearchedProducts.price}</b> has been added or
-              updated.
+              Product: <b>{sortedAndSearchedProducts.name}</b>
             </p>
-            <div className="d-flex justify-content-end">
+            <p>
+              Price: <b>{sortedAndSearchedProducts.price}</b>
+            </p>
+            <div className="d-flex justify-content-center">
               <Button
-                onClick={() => getProducts(currentPage, limitPerPage)}
+                onClick={() => getProducts(startPage, productsPerPage)}
                 variant="outline-success"
               >
                 Ok
@@ -185,46 +169,17 @@ export default function Products({ productsPerPage, startPage }) {
           </Alert>
         )}
       </ListGroup>
-      <Pagination>
-        <Pagination.First onClick={() => getProducts(1, limitPerPage)} />
-        <Pagination.Prev
-          onClick={() =>
-            getProducts(currentPage > 1 ? currentPage - 1 : 1, limitPerPage)
-          }
-        />
-        {getPagesArray !== null &&
-          getPagesArray.map((page) =>
-            page === currentPage ? (
-              <Pagination.Item key={page} active>
-                {page}
-              </Pagination.Item>
-            ) : (
-              <Pagination.Item
-                key={page}
-                onClick={() => getProducts(page, limitPerPage)}
-              >
-                {page}
-              </Pagination.Item>
-            )
-          )}
-
-        <Pagination.Next
-          onClick={() =>
-            getProducts(
-              currentPage < totalPages ? currentPage + 1 : currentPage,
-              limitPerPage
-            )
-          }
-        />
-        <Pagination.Last
-          onClick={() => getProducts(totalPages, limitPerPage)}
-        />
-      </Pagination>
+      <PaginationUI
+        startPage={startPage}
+        itemsPerPage={productsPerPage}
+        pagination={pagination}
+        getItems={getProducts}
+      />
       <ButtonGroup vertical>
         <Button
           variant="outline-primary"
           size="sm"
-          onClick={() => getProducts(1, limitPerPage)}
+          onClick={() => getProducts(1, productsPerPage)}
         >
           Show products
         </Button>
