@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
 /* eslint-disable react/jsx-no-bind */
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Stack, ListGroup, Button, ButtonGroup, Alert } from "react-bootstrap";
-import { API_URL_PRODUCTS } from "../../constants/API";
 import useFetch from "../../hooks/useFetch";
+import { API_URL_PRODUCTS } from "../../constants/API";
 import LoadSpinner from "../../UI/LoadSpinner";
 import ErrorAlert from "../../UI/ErrorAlert";
 import ProductCreate from "./ProductCreate";
@@ -12,7 +13,8 @@ import ProductsFilter from "../../UI/Filter";
 import PaginationUI from "../../UI/PaginationUI";
 
 export default function Products({ startPage, productsPerPage }) {
-  const { pagination, data, loading, error, fetchData } = useFetch();
+  const { status, fetchGet, fetchCreate, fetchUpdate, fetchDelete } =
+    useFetch();
   const [products, setProducts] = useState([]);
   const [visibleCreateForm, setVisibleCreateForm] = useState(false);
   const [visibleUpdateForm, setVisibleUpdateForm] = useState(false);
@@ -23,46 +25,38 @@ export default function Products({ startPage, productsPerPage }) {
   });
 
   useEffect(() => {
-    if (data !== null) {
-      setProducts(data);
+    if (status.data !== null) {
+      setProducts(status.data);
     } else getProducts(startPage, productsPerPage);
-  }, [data]);
+  }, [status.data, startPage, productsPerPage]);
 
-  function getProducts(page, itemPerPage) {
-    fetchData(`${API_URL_PRODUCTS}?Page=${page}&ItemsPerPage=${itemPerPage}`);
-  }
+  const getProducts = useCallback(
+    (page, itemPerPage) => {
+      fetchGet(API_URL_PRODUCTS, page, itemPerPage);
+    },
+    [fetchGet]
+  );
 
-  function createProductCallback(product) {
-    const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(product),
-    };
-    fetchData(API_URL_PRODUCTS, options);
-  }
+  const createProduct = useCallback(
+    (product) => {
+      fetchCreate(API_URL_PRODUCTS, product);
+    },
+    [fetchCreate]
+  );
 
-  function updateHandler(product) {
-    setVisibleUpdateForm(true);
-    setProductForUpdate(product);
-  }
+  const updateProduct = useCallback(
+    (product) => {
+      fetchUpdate(API_URL_PRODUCTS, product);
+    },
+    [fetchUpdate]
+  );
 
-  function updateProductCallback(product) {
-    const options = {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(product),
-    };
-    fetchData(API_URL_PRODUCTS, options);
-  }
-
-  function deleteProductCallback(productId) {
-    const options = {
-      method: "DELETE",
-    };
-    const api = `${API_URL_PRODUCTS}/${productId}`;
-    fetchData(api, options);
-    getProducts(startPage, productsPerPage);
-  }
+  const deleteProduct = useCallback(
+    (id) => {
+      fetchDelete(API_URL_PRODUCTS, id);
+    },
+    [fetchDelete]
+  );
 
   const sortedProducts = useMemo(() => {
     if (filterOpt.selectedSort !== "") {
@@ -94,20 +88,21 @@ export default function Products({ startPage, productsPerPage }) {
     return sortedProducts;
   }, [sortedProducts, filterOpt.searchQuery]);
 
-  if (error != null) return <ErrorAlert message={error.message} />;
-  if (loading) return <LoadSpinner />;
+  if (status.error != null)
+    return <ErrorAlert message={status.error.message} />;
+  if (status.loading) return <LoadSpinner />;
   return (
     <Stack>
       <ProductCreate
         visible={visibleCreateForm}
         setVisible={setVisibleCreateForm}
-        createProductCallback={createProductCallback}
+        createProduct={createProduct}
       />
       <ProductUpdate
         visible={visibleUpdateForm}
         setVisible={setVisibleUpdateForm}
         productForUpdate={productForUpdate}
-        updateProductCallback={updateProductCallback}
+        updateProduct={updateProduct}
       />
       <ProductsFilter
         selectOpt={[
@@ -119,8 +114,7 @@ export default function Products({ startPage, productsPerPage }) {
         setFilterOpt={setFilterOpt}
       />
       <ListGroup as="ol" variant="flush">
-        {sortedAndSearchedProducts !== null &&
-        Array.isArray(sortedAndSearchedProducts) &&
+        {Array.isArray(sortedAndSearchedProducts) &&
         sortedAndSearchedProducts.length === 0 ? (
           <Stack className="m-auto mt-2">
             <h5>The products table is empty.</h5>
@@ -135,14 +129,17 @@ export default function Products({ startPage, productsPerPage }) {
                 size="sm"
                 variant="outline-success"
                 className="mx-1 my-0"
-                onClick={() => updateHandler(product)}
+                onClick={() => {
+                  setVisibleUpdateForm(true);
+                  setProductForUpdate(product);
+                }}
               >
                 Update
               </Button>
               <Button
                 size="sm"
                 variant="outline-danger"
-                onClick={() => deleteProductCallback(product.id)}
+                onClick={() => deleteProduct(product.id)}
               >
                 Delete
               </Button>
@@ -152,6 +149,9 @@ export default function Products({ startPage, productsPerPage }) {
           <Alert variant="success" className="m-auto mt-2">
             <Alert.Heading>Completed successfully</Alert.Heading>
             <hr />
+            <p>
+              ID: <b>{sortedAndSearchedProducts.id}</b>
+            </p>
             <p>
               Product: <b>{sortedAndSearchedProducts.name}</b>
             </p>
@@ -172,8 +172,8 @@ export default function Products({ startPage, productsPerPage }) {
       <PaginationUI
         startPage={startPage}
         itemsPerPage={productsPerPage}
-        pagination={pagination}
-        getItems={getProducts}
+        pagination={status.pagination}
+        onClick={getProducts}
       />
       <ButtonGroup vertical>
         <Button

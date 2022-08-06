@@ -1,13 +1,13 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { Button, Form, FloatingLabel, Row, Col } from "react-bootstrap";
-import ModalWindow from "../../UI/ModalWindow";
 import { API_URL_WAREHOUSES, API_URL_PRODUCTS } from "../../constants/API";
+import ModalWindow from "../../UI/ModalWindow";
 
 export default function TransactionCreate({
   visible,
   setVisible,
-  createTransactionCallback,
+  createTransaction,
 }) {
   const initTransaction = {
     dateTime: new Date().toISOString().slice(0, 10),
@@ -19,7 +19,7 @@ export default function TransactionCreate({
   const [warehouses, setWarehouses] = useState([]);
   const [products, setProducts] = useState([]);
   const [transaction, setTransaction] = useState(initTransaction);
-  const [errors, setErrors] = useState({});
+  const [formErrors, setFormErrors] = useState({});
 
   function fetchData(url, setDate) {
     fetch(url)
@@ -36,34 +36,35 @@ export default function TransactionCreate({
   }
 
   useEffect(() => {
-    fetchData(API_URL_WAREHOUSES, setWarehouses);
-    fetchData(API_URL_PRODUCTS, setProducts);
-  }, []);
+    if (visible) {
+      fetchData(API_URL_WAREHOUSES, setWarehouses);
+      fetchData(API_URL_PRODUCTS, setProducts);
+    }
+  }, [visible]);
 
   function findFormErrors() {
-    const formErrors = {};
+    const errors = {};
     if (transaction.warehouseFromId === 0)
-      formErrors.warehouseIdFromEmpty = "WarehouseFrom can't be empty";
+      errors.warehouseIdFromEmpty = "WarehouseFrom can't be empty";
     if (transaction.warehouseInId === 0)
-      formErrors.warehouseIdInEmpty = "WarehouseIn can't be empty";
+      errors.warehouseIdInEmpty = "WarehouseIn can't be empty";
     if (transaction.warehouseFromId === transaction.warehouseInId)
-      formErrors.warehousesEqual = "Warehouses can't be equal";
+      errors.warehousesEqual = "Warehouses can't be equal";
     if (transaction.productId === 0)
-      formErrors.productIdEmpty = "Product can't be empty";
+      errors.productIdEmpty = "Product can't be empty";
     if (transaction.count <= 0)
-      formErrors.productCountEmptyOrZero =
-        "Product count can't be empty or zero";
-    return formErrors;
+      errors.productCountEmptyOrZero = "Product count can't be empty or zero";
+    return errors;
   }
 
   function createHandler() {
     const formErrors = findFormErrors();
     if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
+      setFormErrors(formErrors);
     } else {
       setVisible(false);
       setTransaction(initTransaction);
-      createTransactionCallback(transaction);
+      createTransaction(transaction);
     }
   }
 
@@ -106,7 +107,7 @@ export default function TransactionCreate({
                 <Form.Control
                   as="select"
                   size="sm"
-                  isInvalid={!!errors.warehouseIdFromEmpty}
+                  isInvalid={!!formErrors.warehouseIdFromEmpty}
                   onChange={(e) => handleClickFrom(e.target.value)}
                   required
                 >
@@ -119,7 +120,7 @@ export default function TransactionCreate({
                     ))}
                 </Form.Control>
                 <Form.Control.Feedback type="invalid">
-                  {errors.warehouseIdFromEmpty}
+                  {formErrors.warehouseIdFromEmpty}
                 </Form.Control.Feedback>
               </FloatingLabel>
             </Col>
@@ -129,7 +130,8 @@ export default function TransactionCreate({
                   as="select"
                   size="sm"
                   isInvalid={
-                    !!errors.warehouseIdInEmpty || !!errors.warehousesEqual
+                    !!formErrors.warehouseIdInEmpty ||
+                    !!formErrors.warehousesEqual
                   }
                   onChange={(e) => handleClickIn(e.target.value)}
                   required
@@ -143,10 +145,10 @@ export default function TransactionCreate({
                     ))}
                 </Form.Control>
                 <Form.Control.Feedback type="invalid">
-                  {errors.warehouseIdInEmpty}
+                  {formErrors.warehouseIdInEmpty}
                 </Form.Control.Feedback>
                 <Form.Control.Feedback type="invalid">
-                  {errors.warehousesEqual}
+                  {formErrors.warehousesEqual}
                 </Form.Control.Feedback>
               </FloatingLabel>
             </Col>
@@ -157,7 +159,7 @@ export default function TransactionCreate({
             <Form.Control
               as="select"
               size="sm"
-              isInvalid={!!errors.productIdEmpty}
+              isInvalid={!!formErrors.productIdEmpty}
               onChange={(e) => handleClickProduct(e.target.value)}
             >
               <option></option>
@@ -169,13 +171,13 @@ export default function TransactionCreate({
                 ))}
             </Form.Control>
             <Form.Control.Feedback type="invalid">
-              {errors.productIdEmpty}
+              {formErrors.productIdEmpty}
             </Form.Control.Feedback>
           </FloatingLabel>
           <FloatingLabel label="Count" className="mb-3">
             <Form.Control
               size="sm"
-              isInvalid={!!errors.productCountEmptyOrZero}
+              isInvalid={!!formErrors.productCountEmptyOrZero}
               onChange={(e) =>
                 setTransaction({
                   ...transaction,
@@ -186,7 +188,7 @@ export default function TransactionCreate({
               placeholder="Product count"
             />
             <Form.Control.Feedback type="invalid">
-              {errors.productCountEmptyOrZero}
+              {formErrors.productCountEmptyOrZero}
             </Form.Control.Feedback>
           </FloatingLabel>
         </Form.Group>

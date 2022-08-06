@@ -3,30 +3,25 @@ import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import ModalWindow from "../../UI/ModalWindow";
 
-export default function ProductCreate({
-  visible,
-  setVisible,
-  createProductCallback,
-}) {
+export default function ProductCreate({ visible, setVisible, createProduct }) {
   const [product, setProduct] = useState({ name: "", price: 0 });
-  const [errors, setErrors] = useState({});
+  const [formErrors, setFormErrors] = useState({});
 
   function findFormErrors() {
-    const formErrors = {};
+    const errors = {};
     if (product.name === "")
-      formErrors.productNameEmpty = "Product name can't be empty";
+      errors.productNameEmpty = "Product name can't be empty";
     if (product.price === "" || product.price <= 0)
-      formErrors.productPriceEmptyOrZero =
-        "Product count can't be empty or zero";
-    return formErrors;
+      errors.productPriceEmptyOrZero = "Product count can't be empty or zero";
+    return errors;
   }
 
   function createHandler() {
     const formErrors = findFormErrors();
     if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
+      setFormErrors(formErrors);
     } else {
-      createProductCallback(product);
+      createProduct(product);
       setVisible(false);
     }
   }
@@ -38,26 +33,26 @@ export default function ProductCreate({
           <Form.Label>Name</Form.Label>
           <Form.Control
             value={product.name}
-            isInvalid={!!errors.productNameEmpty}
+            isInvalid={!!formErrors.productNameEmpty}
             onChange={(e) => setProduct({ ...product, name: e.target.value })}
             type="text"
             placeholder="Name of product"
           />
           <Form.Control.Feedback type="invalid">
-            {errors.productNameEmpty}
+            {formErrors.productNameEmpty}
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="mb-3" controlId="ProductPrice">
           <Form.Label>Price</Form.Label>
           <Form.Control
             value={product.price}
-            isInvalid={!!errors.productPriceEmptyOrZero}
+            isInvalid={!!formErrors.productPriceEmptyOrZero}
             onChange={(e) => setProduct({ ...product, price: e.target.value })}
             type="number"
             placeholder="Price of product"
           />
           <Form.Control.Feedback type="invalid">
-            {errors.productPriceEmptyOrZero}
+            {formErrors.productPriceEmptyOrZero}
           </Form.Control.Feedback>
         </Form.Group>
         <Button variant="primary" onClick={() => createHandler()}>

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect, useCallback } from "react";
 // @ts-ignore
-import { Stack, Row, Col, Card, Button, ButtonGroup } from "react-bootstrap";
-import { useReducerContext } from "../../hooks/useReducerContext";
+import { Stack, Row, Col, Card, Button } from "react-bootstrap";
 import { API_URL_WAREHOUSES } from "../../constants/API";
 import useFetch from "../../hooks/useFetch";
 import LoadSpinner from "../../UI/LoadSpinner";
@@ -11,66 +11,67 @@ import WarehouseCreditImage from "../../imgs/credit_of_warehouses.png";
 import ErrorAlert from "../../UI/ErrorAlert";
 import WarehouseCreate from "./WarehouseCreate";
 import WarehouseUpdate from "./WarehouseUpdate";
+import WarehouseProducts from "./WarehouseProducts";
 
-export default function Warehouses() {
-  const { data, loading, error, fetchData } = useFetch(API_URL_WAREHOUSES);
+export default function Warehouses({ setView }) {
+  const { status, fetchGet, fetchCreate, fetchUpdate, fetchDelete } =
+    useFetch();
   const [warehouses, setWarehouses] = useState([]);
-  const { dispatch } = useReducerContext();
   const [visibleCreateForm, setVisibleCreateForm] = useState(false);
   const [visibleUpdateForm, setVisibleUpdateForm] = useState(false);
   const [warehouseForUpdate, setWarehouseForUpdate] = useState(null);
 
   useEffect(() => {
-    if (data !== null) {
-      setWarehouses(data);
-    }
-  }, [data]);
+    if (status.data !== null) {
+      setWarehouses(status.data);
+    } else getWarehouses();
+  }, [status.data]);
 
-  function createWarehouseCallback(warehouse) {
-    const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(warehouse),
-    };
-    fetchData(API_URL_WAREHOUSES, options);
-  }
+  const getWarehouses = useCallback(() => {
+    fetchGet(API_URL_WAREHOUSES);
+  }, [fetchGet]);
+
+  const createWarehouses = useCallback(
+    (warehouse) => {
+      fetchCreate(API_URL_WAREHOUSES, warehouse);
+    },
+    [fetchCreate]
+  );
+
+  const updateWarehouses = useCallback(
+    (warehouse) => {
+      fetchUpdate(API_URL_WAREHOUSES, warehouse);
+    },
+    [fetchUpdate]
+  );
+
+  const deleteWarehouses = useCallback(
+    (id) => {
+      fetchDelete(API_URL_WAREHOUSES, id);
+    },
+    [fetchDelete]
+  );
 
   function updateHandler(warehouse) {
     setVisibleUpdateForm(true);
     setWarehouseForUpdate(warehouse);
   }
 
-  function updateWarehouseCallback(warehouse) {
-    const options = {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(warehouse),
-    };
-    fetchData(API_URL_WAREHOUSES, options);
-  }
-
-  function deleteWarehouseCallback(warehouseId) {
-    const options = {
-      method: "DELETE",
-    };
-    const api = `${API_URL_WAREHOUSES}/${warehouseId}`;
-    fetchData(api, options);
-  }
-
-  if (error != null) return <ErrorAlert message={error.message} />;
-  if (loading) return <LoadSpinner />;
+  if (status.error != null)
+    return <ErrorAlert message={status.error.message} />;
+  if (status.loading) return <LoadSpinner />;
   return (
-    <Stack>
+    <>
       <WarehouseCreate
         visible={visibleCreateForm}
         setVisible={setVisibleCreateForm}
-        createWarehouseCallback={createWarehouseCallback}
+        createWarehouses={createWarehouses}
       />
       <WarehouseUpdate
         visible={visibleUpdateForm}
         setVisible={setVisibleUpdateForm}
         warehouseForUpdate={warehouseForUpdate}
-        updateWarehouseCallback={updateWarehouseCallback}
+        updateWarehouses={updateWarehouses}
       />
       <Row className="ms-1 my-0 me-0 p-0">
         {warehouses !== null &&
@@ -95,7 +96,7 @@ export default function Warehouses() {
                       size="sm"
                       variant="outline-primary"
                       onClick={() =>
-                        dispatch({ type: "BalanceProducts", id: warehouse.id })
+                        setView(<WarehouseProducts id={warehouse.id} />)
                       }
                     >
                       Show products
@@ -110,7 +111,7 @@ export default function Warehouses() {
                     <Button
                       size="sm"
                       variant="outline-danger"
-                      onClick={() => deleteWarehouseCallback(warehouse.id)}
+                      onClick={() => deleteWarehouses(warehouse.id)}
                     >
                       Delete
                     </Button>
@@ -120,7 +121,7 @@ export default function Warehouses() {
             </Col>
           ))}
       </Row>
-      <ButtonGroup vertical>
+      <Stack>
         <Button
           variant="outline-success"
           size="sm"
@@ -128,7 +129,7 @@ export default function Warehouses() {
         >
           Add warehouse
         </Button>
-      </ButtonGroup>
-    </Stack>
+      </Stack>
+    </>
   );
 }

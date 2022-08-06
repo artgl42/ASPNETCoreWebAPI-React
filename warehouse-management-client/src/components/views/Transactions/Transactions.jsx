@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 // @ts-ignore
-import { Stack, ListGroup, Button, ButtonGroup } from "react-bootstrap";
-import { API_URL_TRANSACTIONS } from "../../constants/API";
+import { Stack, ListGroup, Button, ButtonGroup, Alert } from "react-bootstrap";
 import useFetch from "../../hooks/useFetch";
+import { API_URL_TRANSACTIONS } from "../../constants/API";
 import LoadSpinner from "../../UI/LoadSpinner";
 import ErrorAlert from "../../UI/ErrorAlert";
 import TransactionCreate from "./TransactionCreate";
@@ -10,7 +11,7 @@ import TransactionsFilter from "../../UI/Filter";
 import PaginationUI from "../../UI/PaginationUI";
 
 export default function Transactions({ startPage, transactionsPerPage }) {
-  const { pagination, data, loading, error, fetchData } = useFetch();
+  const { status, fetchGet, fetchCreate } = useFetch();
   const [transactions, setTransactions] = useState([]);
   const [visibleCreateForm, setVisibleCreateForm] = useState(false);
   const [filterOpt, setFilterOpt] = useState({
@@ -19,25 +20,24 @@ export default function Transactions({ startPage, transactionsPerPage }) {
   });
 
   useEffect(() => {
-    if (data !== null) {
-      setTransactions(data);
+    if (status.data !== null) {
+      setTransactions(status.data);
     } else getTransactions(startPage, transactionsPerPage);
-  }, [data]);
+  }, [status.data, startPage, transactionsPerPage]);
 
-  function getTransactions(page, itemPerPage) {
-    fetchData(
-      `${API_URL_TRANSACTIONS}?Page=${page}&ItemsPerPage=${itemPerPage}`
-    );
-  }
+  const getTransactions = useCallback(
+    (page, itemPerPage) => {
+      fetchGet(API_URL_TRANSACTIONS, page, itemPerPage);
+    },
+    [fetchGet]
+  );
 
-  function createTransactionCallback(transaction) {
-    const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(transaction),
-    };
-    fetchData(API_URL_TRANSACTIONS, options);
-  }
+  const createTransaction = useCallback(
+    (product) => {
+      fetchCreate(API_URL_TRANSACTIONS, product);
+    },
+    [fetchCreate]
+  );
 
   const sortedTransactions = useMemo(() => {
     if (filterOpt.selectedSort !== "") {
@@ -76,21 +76,25 @@ export default function Transactions({ startPage, transactionsPerPage }) {
   }, [transactions, filterOpt.selectedSort]);
 
   const sortedAndSearchedTransactions = useMemo(() => {
-    return sortedTransactions.filter((transaction) =>
-      transaction.product.name
-        .toLowerCase()
-        .includes(filterOpt.searchQuery.toLowerCase())
-    );
+    if (Array.isArray(sortedTransactions)) {
+      return sortedTransactions.filter((transaction) =>
+        transaction.product.name
+          .toLowerCase()
+          .includes(filterOpt.searchQuery.toLowerCase())
+      );
+    }
+    return sortedTransactions;
   }, [sortedTransactions, filterOpt.searchQuery]);
 
-  if (error != null) return <ErrorAlert message={error.message} />;
-  if (loading) return <LoadSpinner />;
+  if (status.error != null)
+    return <ErrorAlert message={status.error.message} />;
+  if (status.loading) return <LoadSpinner />;
   return (
     <Stack>
       <TransactionCreate
         visible={visibleCreateForm}
         setVisible={setVisibleCreateForm}
-        createTransactionCallback={createTransactionCallback}
+        createTransaction={createTransaction}
       />
       <TransactionsFilter
         selectOpt={[
@@ -104,15 +108,16 @@ export default function Transactions({ startPage, transactionsPerPage }) {
         filterOpt={filterOpt}
         setFilterOpt={setFilterOpt}
       />
-      <ListGroup as="ol" numbered variant="flush">
-        {sortedAndSearchedTransactions !== null &&
+      <ListGroup as="ol" variant="flush">
+        {Array.isArray(sortedAndSearchedTransactions) &&
         sortedAndSearchedTransactions.length === 0 ? (
           <Stack className="m-auto mt-2">
             <h5>The transactions table is empty.</h5>
           </Stack>
-        ) : (
+        ) : Array.isArray(sortedAndSearchedTransactions) ? (
           sortedAndSearchedTransactions.map((transaction) => (
             <ListGroup.Item as="li" key={transaction.id} className="d-flex">
+              <Stack className="ms-2">{`${transaction.id}`}</Stack>
               <Stack className="w-100 ms-2">
                 {`${transaction.dateTime.slice(0, 10)}`}
               </Stack>
@@ -130,19 +135,32 @@ export default function Transactions({ startPage, transactionsPerPage }) {
               <Stack className="w-100">{`${transaction.count}`}</Stack>
             </ListGroup.Item>
           ))
+        ) : (
+          <Alert variant="success" className="m-auto mt-2">
+            <Alert.Heading>Completed successfully</Alert.Heading>
+            <hr />
+            <div className="d-flex justify-content-center">
+              <Button
+                onClick={() => getTransactions(startPage, transactionsPerPage)}
+                variant="outline-success"
+              >
+                Ok
+              </Button>
+            </div>
+          </Alert>
         )}
       </ListGroup>
       <PaginationUI
         startPage={startPage}
         itemsPerPage={transactionsPerPage}
-        pagination={pagination}
-        getItems={getTransactions}
+        pagination={status.pagination}
+        onClick={getTransactions}
       />
       <ButtonGroup vertical>
         <Button
           variant="outline-primary"
           size="sm"
-          onClick={() => setTransactions(data)}
+          onClick={() => setTransactions(status.data)}
         >
           Show all transactions
         </Button>
@@ -150,7 +168,9 @@ export default function Transactions({ startPage, transactionsPerPage }) {
           variant="outline-primary"
           size="sm"
           onClick={() =>
-            setTransactions(data.filter((transaction) => transaction.count > 0))
+            setTransactions(
+              status.data.filter((transaction) => transaction.count > 0)
+            )
           }
         >
           Show debit transactions
@@ -159,7 +179,9 @@ export default function Transactions({ startPage, transactionsPerPage }) {
           variant="outline-primary"
           size="sm"
           onClick={() =>
-            setTransactions(data.filter((transaction) => transaction.count < 0))
+            setTransactions(
+              status.data.filter((transaction) => transaction.count < 0)
+            )
           }
         >
           Show credit transactions

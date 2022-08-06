@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect, useCallback } from "react";
 // @ts-ignore
 import { Stack, ListGroup, Badge } from "react-bootstrap";
-import { API_URL_REPORTS } from "../constants/API";
-import useFetch from "../hooks/useFetch";
-import LoadSpinner from "../UI/LoadSpinner";
-import ErrorAlert from "../UI/ErrorAlert";
+import { API_URL_REPORTS } from "../../constants/API";
+import useFetch from "../../hooks/useFetch";
+import LoadSpinner from "../../UI/LoadSpinner";
+import ErrorAlert from "../../UI/ErrorAlert";
 
 export default function WarehouseProducts({ id }) {
+  const { status, fetchGet } = useFetch();
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [products, setProducts] = useState([]);
 
@@ -16,23 +18,24 @@ export default function WarehouseProducts({ id }) {
     }-${new Date(fdate).getDate()}`;
   }
 
-  const { data, loading, error, fetchData } = useFetch(
-    `${API_URL_REPORTS}/${getFormatedDate(date)}/${id}`
-  );
-
   useEffect(() => {
-    if (data !== null) {
-      setProducts(data);
-    }
-  }, [data]);
+    if (status.data !== null) {
+      setProducts(status.data);
+    } else getProducts();
+  }, [status.data]);
+
+  const getProducts = useCallback(() => {
+    fetchGet(`${API_URL_REPORTS}/${getFormatedDate(date)}/${id}`);
+  }, [fetchGet, date, id]);
 
   function handleChangeDate(e) {
     setDate(e.target.value);
-    fetchData(`${API_URL_REPORTS}/${getFormatedDate(e.target.value)}/${id}`);
+    fetchGet(`${API_URL_REPORTS}/${getFormatedDate(e.target.value)}/${id}`);
   }
 
-  if (error != null) return <ErrorAlert message={error.message} />;
-  if (loading) return <LoadSpinner />;
+  if (status.error != null)
+    return <ErrorAlert message={status.error.message} />;
+  if (status.loading) return <LoadSpinner />;
   return (
     <Stack className="my-2">
       <Stack direction="horizontal" gap={1}>

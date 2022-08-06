@@ -6,7 +6,7 @@ export default function PaginationUI({
   startPage,
   itemsPerPage,
   pagination,
-  getItems,
+  onClick,
 }) {
   const [totalPages, setTotalPages] = useState(0);
   const [limitPerPage] = useState(itemsPerPage);
@@ -27,10 +27,10 @@ export default function PaginationUI({
 
   return (
     <Pagination>
-      <Pagination.First onClick={() => getItems(1, limitPerPage)} />
+      <Pagination.First onClick={() => onClick(1, limitPerPage)} />
       <Pagination.Prev
         onClick={() =>
-          getItems(currentPage > 1 ? currentPage - 1 : 1, limitPerPage)
+          onClick(currentPage > 1 ? currentPage - 1 : 1, limitPerPage)
         }
       />
       {getPagesArray !== null &&
@@ -42,7 +42,7 @@ export default function PaginationUI({
           ) : (
             <Pagination.Item
               key={page}
-              onClick={() => getItems(page, limitPerPage)}
+              onClick={() => onClick(page, limitPerPage)}
             >
               {page}
             </Pagination.Item>
@@ -51,13 +51,13 @@ export default function PaginationUI({
 
       <Pagination.Next
         onClick={() =>
-          getItems(
+          onClick(
             currentPage < totalPages ? currentPage + 1 : currentPage,
             limitPerPage
           )
         }
       />
-      <Pagination.Last onClick={() => getItems(totalPages, limitPerPage)} />
+      <Pagination.Last onClick={() => onClick(totalPages, limitPerPage)} />
     </Pagination>
   );
 }

@@ -6,7 +6,7 @@ import ModalWindow from "../../UI/ModalWindow";
 export default function WarehouseCreate({
   visible,
   setVisible,
-  createWarehouseCallback,
+  createWarehouses,
 }) {
   const [warehouse, setWarehouse] = useState({ name: "", address: "" });
   const [errors, setErrors] = useState({});
@@ -24,7 +24,7 @@ export default function WarehouseCreate({
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
     } else {
-      createWarehouseCallback(warehouse);
+      createWarehouses(warehouse);
       setVisible(false);
     }
   }

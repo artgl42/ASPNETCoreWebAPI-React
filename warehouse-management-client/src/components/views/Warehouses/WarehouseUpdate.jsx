@@ -7,7 +7,7 @@ export default function WarehouseUpdate({
   visible,
   setVisible,
   warehouseForUpdate,
-  updateWarehouseCallback,
+  updateWarehouses,
 }) {
   const [warehouse, setWarehouse] = useState({ id: "", name: "", address: "" });
   const [errors, setErrors] = useState({});
@@ -25,7 +25,7 @@ export default function WarehouseUpdate({
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
     } else {
-      updateWarehouseCallback({
+      updateWarehouses({
         ...warehouse,
         id: warehouseForUpdate.id,
       });
