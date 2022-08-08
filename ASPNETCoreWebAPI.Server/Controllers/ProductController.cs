@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WarehouseManagementServer.DTOs;
-using WarehouseManagementServer.Models;
+using ASPNETCoreWebAPI.Server.DTOs;
+using ASPNETCoreWebAPI.Server.Models;
 
-namespace WarehouseManagementServer.Controllers
+namespace ASPNETCoreWebAPI.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

@@ -1,4 +1,4 @@
-# WarehouseManagementApp
+# ASPNETCoreWebAPI-React
 
 Example of a client-server application with ASP.NET Core web API as a server (backend) and React SPA as a client (frontend).
 
@@ -15,7 +15,7 @@ Tried to implement a RESTful service sample using ASP.NET Core Web API with cont
 - ASP.NET Core 6.0;
 - Entity Framework Core 6.0.5;
 - MS SQL Server 2014;
-- Swagger UI 1.0.
+- Swashbuckle 6.2.3.
 
 ## Frontend:
 - React 18.1.0;
@@ -29,20 +29,20 @@ Tried to implement a RESTful service sample using ASP.NET Core Web API with cont
 
 # How to run
 
-1. `$ git clone https://github.com/artgl42/WarehouseManagementApp.git`
-2. Visual Studio -> Open **WarehouseManagementApp.sln** -> Build and run 
+1. `$ git clone https://github.com/artgl42/ASPNETCoreWebAPI-React.git`
+2. Visual Studio -> Open **ASPNETCoreWebAPI-React.sln** -> Build and run 
    
    >don't forget to change *ConnectionStrings* in **appsettings.json** to your SQL Server location (database will be created automatically)
 
-3. `$ cd WarehouseManagementApp/warehouse-management-client`
+3. `$ cd ASPNETCoreWebAPI-React/react-client`
 4. `$ npm install`
 5. `$ npm start`
 
 # API Endpoints
 
-![api_list.jpg](api_list.jpg "APIs list")
+![api_list.jpg](api_list.jpg "API Endpoints list")
 
 
 # Screenshots
 
-![WarehouseManagementApp.gif](WarehouseManagementApp.gif "ASP.NET core web API (backend) and React (frontend)")
+![ASPNETCoreWebAPI-React.gif](ASPNETCoreWebAPI_React.gif "Example of a client-server application with ASP.NET Core web API as a server (backend) and React SPA as a client (frontend)")

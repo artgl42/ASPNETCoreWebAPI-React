@@ -1,4 +1,4 @@
-﻿namespace WarehouseManagementServer.DTOs
+﻿namespace ASPNETCoreWebAPI.Server.DTOs
 {
     public class PaginationParams
     {

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace WarehouseManagementServer.Models
+namespace ASPNETCoreWebAPI.Server.Models
 {
     public class Warehouse
     {
