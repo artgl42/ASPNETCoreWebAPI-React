@@ -73,17 +73,17 @@ export default function Warehouses({ setView }) {
         warehouseForUpdate={warehouseForUpdate}
         updateWarehouses={updateWarehouses}
       />
-      <Row className="ms-1 my-0 me-0 p-0">
+      <Row className="ms-1 me-2">
         {warehouses !== null &&
-          warehouses.map((warehouse, index) => (
-            <Col key={index} className="ms-0 my-1 me-1 p-0">
+          warehouses.map((warehouse) => (
+            <Col key={warehouse.id} md="6" lg="4" xl="3" className="p-1">
               <Card>
                 <Card.Img
                   variant="top"
                   src={
-                    index === 0
+                    warehouse.id === 1
                       ? WarehouseDebitImage
-                      : index === 1
+                      : warehouse.id === 1
                       ? WarehouseCreditImage
                       : WarehouseImage
                   }

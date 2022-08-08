@@ -12,7 +12,7 @@ export default function ProductCreate({ visible, setVisible, createProduct }) {
     if (product.name === "")
       errors.productNameEmpty = "Product name can't be empty";
     if (product.price === "" || product.price <= 0)
-      errors.productPriceEmptyOrZero = "Product count can't be empty or zero";
+      errors.productPriceEmptyOrZero = "Product price can't be empty or zero";
     return errors;
   }
 

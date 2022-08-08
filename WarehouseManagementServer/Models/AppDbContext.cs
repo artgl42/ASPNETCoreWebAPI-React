@@ -33,14 +33,14 @@ namespace WarehouseManagementServer.Models
             _warehouses[0] = new Warehouse
             {
                 ID = 1,
-                Name = "Debit of warehouses",
-                Address = "Virtual warehouse"
+                Name = "Debit",
+                Address = "Virtual debit warehouse"
             };
             _warehouses[1] = new Warehouse
             {
                 ID = 2,
-                Name = "Credit of warehouses",
-                Address = "Virtual warehouse"
+                Name = "Credit",
+                Address = "Virtual credit warehouse"
             };
             for (int i = 2; i < _warehouses.Length; i++)
             {
@@ -48,7 +48,7 @@ namespace WarehouseManagementServer.Models
                 {
                     ID = i + 1,
                     Name = $"Warehouse {i - 1}",
-                    Address = $"Some address for warehouse {i - 1}"
+                    Address = $"Warehouse address {i - 1}"
                 };
             }
 
@@ -66,7 +66,6 @@ namespace WarehouseManagementServer.Models
             }
 
             Transaction[] _transactions = new Transaction[2];
-
             _transactions[0] = new Transaction
             {
                 ID = 1,
@@ -76,7 +75,6 @@ namespace WarehouseManagementServer.Models
                 ProductID = 1,
                 Count = -100
             };
-
             _transactions[1] = new Transaction
             {
                 ID = 2,
@@ -86,6 +84,7 @@ namespace WarehouseManagementServer.Models
                 ProductID = 1,
                 Count = 100
             };
+
             modelBuilder.Entity<Warehouse>().HasData(_warehouses);
             modelBuilder.Entity<Product>().HasData(_products);
             modelBuilder.Entity<Transaction>().HasData(_transactions);
